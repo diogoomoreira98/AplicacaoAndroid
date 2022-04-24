@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/activity_fullscreen.xml" value="0.17147922998986828" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/activity_registo.xml" value="0.22871376811594202" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_calendario.xml" value="0.25679347826086957" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_notificacoes.xml" value="0.25679347826086957" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_reserva.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_reservas.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/inicio.xml" value="0.22" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/login.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/menu/bottom_menu.xml" value="0.3416666666666667" />
+        <entry key="..\:/AndroidProjects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

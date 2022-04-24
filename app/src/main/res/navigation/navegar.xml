@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navegar"
+    app:startDestination="@id/reservas">
+
+    <fragment
+        android:id="@+id/reservas"
+        android:name="com.example.myapplication.Inicio.Fragmentos.Reservas"
+        android:label="fragment_reservas"
+        tools:layout="@layout/fragment_reservas" />
+    <fragment
+        android:id="@+id/reserva"
+        android:name="com.example.myapplication.Inicio.Fragmentos.Reserva"
+        android:label="fragment_reserva"
+        tools:layout="@layout/fragment_reserva" />
+    <fragment
+        android:id="@+id/calendario"
+        android:name="com.example.myapplication.Inicio.Fragmentos.Calendario"
+        android:label="fragment_calendario"
+        tools:layout="@layout/fragment_calendario" />
+    <fragment
+        android:id="@+id/notificacoes"
+        android:name="com.example.myapplication.Inicio.Fragmentos.Notificacoes"
+        android:label="fragment_notificacoes"
+        tools:layout="@layout/fragment_notificacoes" />
+</navigation>

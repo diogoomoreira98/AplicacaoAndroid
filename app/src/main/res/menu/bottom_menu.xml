@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/reservas"
+        android:title="Reservas"
+        android:icon="@drawable/ic_reservas" />
+
+    <item
+        android:id="@+id/reserva"
+        android:title="Reservar"
+        android:icon="@drawable/ic_reservar" />
+
+    <item
+        android:id="@+id/calendario"
+        android:title="Calendário"
+        android:icon="@drawable/ic_calendario"/>
+
+    <item
+        android:id="@+id/notificacoes"
+        android:title="Notificações"
+        android:icon="@drawable/ic_notificacao"/>
+</menu>
