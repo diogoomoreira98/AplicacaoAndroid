@@ -52,7 +52,7 @@ public class Registo extends AppCompatActivity {
                 {
 
                     String ROUTER = "/register";
-                    String URL = "http://176.79.161.72:3000"+ROUTER;
+                    String URL = "176.79.161.72:3000"+ROUTER;
                     JSONObject request = new JSONObject();
 
                     try {
@@ -60,13 +60,9 @@ public class Registo extends AppCompatActivity {
                         request.put("email", nome.getText());
                         request.put("centro", 1);
                         request.put("confirm_password", c_password.getText());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+
                     //este metodo ativa acesso a internet
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
+
                             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                     Request.Method.POST,
@@ -77,6 +73,7 @@ public class Registo extends AppCompatActivity {
                                         public void onResponse(JSONObject response) {
                                             //se o resgito se verficar entao entra na pagina principal
                                             Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
+                                            Toast.makeText(getApplicationContext(), response.toString(),Toast.LENGTH_LONG);
                                             startActivity(mRegisto);
                                         }
                                     }, new Response.ErrorListener() {
@@ -86,26 +83,12 @@ public class Registo extends AppCompatActivity {
                                 }
                             }
                             );
+                            requestQueue.add(jsonObjectRequest);
 
-                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            // Display the first 500 characters of the response string.
-                                            Toast.makeText(getApplicationContext(), response.toString(),Toast.LENGTH_LONG);
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(), error.toString(),Toast.LENGTH_LONG);
-                                }
-                            });
-
-                            queue.add(stringRequest);
-                        }
-                    });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), e.toString(),Toast.LENGTH_LONG);
+                    }
 
                 }
 
