@@ -36,9 +36,8 @@ public class Registo extends AppCompatActivity {
         f_registo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Validar campos
-                checkDataEntered();
                 // mudar para atividade Inicio
-                if (checkDataEntered()==true)
+                if (checkDataEntered())
                 {
                     Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
                      startActivity(mRegisto);
@@ -50,7 +49,8 @@ public class Registo extends AppCompatActivity {
     //Verificar se é email
     boolean isEmail(EditText text){
         CharSequence email = text.getText().toString();
-        return (TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        System.out.println(Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        return (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
     //Verificar se o campo não está vazio
     boolean isEmpty(EditText text){
@@ -58,24 +58,26 @@ public class Registo extends AppCompatActivity {
         return TextUtils.isEmpty(str);
     }
     public boolean  checkDataEntered(){
+        boolean check = true;
+
         if (isEmpty(nome)){
             nome.setError("Introduz um nome");
-            return false;
+            check = false;
         }
         if (isEmpty(password)){
             password.setError("Introduz uma password válida");
-            return false;
+            check = false;
         }
         if (isEmpty(c_password)){
             c_password.setError("Confirmação de password incorreta");
-            return false;
+            check = false;
         }
-        if (!isEmail(email)){
-           email.setError("Introduza um email");
-            return false;
+        if (isEmail(email)){
+            email.setError("Introduza um email");
+            check = false;
         }
-        else {
-            return true;
-        }
+
+
+        return check;
     }
 }
