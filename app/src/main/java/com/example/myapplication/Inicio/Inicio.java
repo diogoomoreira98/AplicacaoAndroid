@@ -2,14 +2,18 @@ package com.example.myapplication.Inicio;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Fragmentos.Calendario;
 import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.Reserva;
@@ -17,6 +21,8 @@ import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import org.json.JSONObject;
 
 public class Inicio extends AppCompatActivity {
 
@@ -57,4 +63,10 @@ public class Inicio extends AppCompatActivity {
        });
 
     }
+
 }
+
+
+
+
+

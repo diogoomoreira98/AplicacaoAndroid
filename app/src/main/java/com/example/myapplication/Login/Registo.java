@@ -1,8 +1,8 @@
 package com.example.myapplication.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -11,8 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Registo extends AppCompatActivity {
 
@@ -37,15 +47,72 @@ public class Registo extends AppCompatActivity {
             public void onClick(View v) {
                 //Validar campos
                 // mudar para atividade Inicio
-                if (checkDataEntered())
+                //if (checkDataEntered())
+                if (true)
                 {
-                    Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
-                     startActivity(mRegisto);
+
+                    String ROUTER = "/register";
+                    String URL = "http://176.79.161.72:3000"+ROUTER;
+                    JSONObject request = new JSONObject();
+
+                    try {
+                        request.put("username", nome.getText());
+                        request.put("email", nome.getText());
+                        request.put("centro", 1);
+                        request.put("confirm_password", c_password.getText());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //este metodo ativa acesso a internet
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                    Request.Method.POST,
+                                    URL,
+                                    request,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            //se o resgito se verficar entao entra na pagina principal
+                                            Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
+                                            startActivity(mRegisto);
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), error.toString(),Toast.LENGTH_LONG);
+                                }
+                            }
+                            );
+
+                            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // Display the first 500 characters of the response string.
+                                            Toast.makeText(getApplicationContext(), response.toString(),Toast.LENGTH_LONG);
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), error.toString(),Toast.LENGTH_LONG);
+                                }
+                            });
+
+                            queue.add(stringRequest);
+                        }
+                    });
+
                 }
 
             }
         });
     }
+
     //Verificar se é email
     boolean isEmail(EditText text){
         CharSequence email = text.getText().toString();
