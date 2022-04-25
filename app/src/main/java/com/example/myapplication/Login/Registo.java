@@ -47,8 +47,7 @@ public class Registo extends AppCompatActivity {
             public void onClick(View v) {
                 //Validar campos
                 // mudar para atividade Inicio
-                //if (checkDataEntered())
-                if (true)
+                if (checkDataEntered())
                 {
 
                     String ROUTER = "/register";
@@ -75,10 +74,15 @@ public class Registo extends AppCompatActivity {
                                     new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
-                                            //se o resgito se verficar entao entra na pagina principal
-                                            //Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
-                                            //startActivity(mRegisto);
-                                            Toast.makeText(getApplicationContext(), response.toString(),Toast.LENGTH_LONG).show();
+                                            if(response.opt("status").toString()=="success"){
+                                                //se o resgito se verficar entao entra na pagina principal
+                                                Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
+                                                startActivity(mRegisto);
+                                            }else{
+                                                Toast.makeText(getApplicationContext(), response.opt("data").toString(),Toast.LENGTH_LONG).show();
+                                            }
+
+
                                         }
                                     }, new Response.ErrorListener() {
                                 @Override
