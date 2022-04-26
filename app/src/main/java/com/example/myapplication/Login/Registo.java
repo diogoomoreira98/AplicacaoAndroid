@@ -1,12 +1,17 @@
 package com.example.myapplication.Login;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,11 +35,20 @@ public class Registo extends AppCompatActivity {
     EditText nome;
     EditText password;
     EditText c_password;
+    AutoCompleteTextView autoCompleteTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registo);
+
+        //Selecionar centro
+        autoCompleteTextView = findViewById(R.id.editCentro);
+        String[]option = {"Viseu", "Algarve", "Tondela","França"};
+        ArrayAdapter arrayAdapter = new ArrayAdapter(Registo.this,R.layout.centros_item , option);
+        autoCompleteTextView.setAdapter(arrayAdapter);
+
 
         email = findViewById(R.id.editEmail);
         nome = findViewById(R.id.editNome);
