@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Login.Registo">
 
+
+
     <EditText
         android:id="@+id/editNome"
         android:layout_width="350dp"
