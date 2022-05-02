@@ -4,16 +4,20 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/drawable/ic_calendario.xml" value="0.1975" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/drawable/ic_reservar.xml" value="0.163" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/drawable/search_view_bg.xml" value="0.163" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/activity_fullscreen.xml" value="0.17147922998986828" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/activity_registo.xml" value="0.22" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/centros_item.xml" value="0.18885869565217392" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_calendario.xml" value="0.25679347826086957" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_notificacoes.xml" value="0.25679347826086957" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_reserva.xml" value="0.5" />
-        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_reservas.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/fragment_reservas.xml" value="0.2" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/inicio.xml" value="0.25" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/login.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/layout/search_item.xml" value="0.19791666666666666" />
         <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/menu/bottom_menu.xml" value="0.3416666666666667" />
+        <entry key="..\:/AndroidProjects/Aplicacao/app/src/main/res/menu/search_item.xml" value="0.36666666666666664" />
         <entry key="..\:/AndroidProjects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Pedro Frias/AndroidStudioProjects/AplicacaoAndroid/app/src/main/res/layout/activity_registo.xml" value="0.1762917933130699" />
       </map>
