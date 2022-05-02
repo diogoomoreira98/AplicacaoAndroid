@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Inicio.Inicio">
+    android:orientation="vertical">
 
     <Button
         android:layout_width="wrap_content"
@@ -15,7 +15,6 @@
         android:textColor="@color/white"
         android:background="@null"
         android:textStyle="bold"
-        android:onClick="weeklyAction"
         android:textSize="20sp"/>
 
 
@@ -27,15 +26,15 @@
         android:layout_marginTop="20dp">
 
         <Button
+            android:id="@+id/anterior"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
             android:text="@string/Anterior"
             android:textColor="@color/white"
-            android:background="@null"
-            android:textStyle="bold"
-            android:onClick="previousMonthAction"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/monthYearTV"
@@ -48,15 +47,15 @@
             android:textColor="@color/black"/>
 
         <Button
+            android:id="@+id/seguinte"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
             android:text="@string/Seguinte"
             android:textColor="@color/white"
-            android:background="@null"
-            android:textStyle="bold"
-            android:onClick="nextMonthAction"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -138,6 +137,3 @@
         android:layout_height="match_parent"/>
 
 </LinearLayout>
-
-
-

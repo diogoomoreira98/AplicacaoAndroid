@@ -1,10 +1,9 @@
 package com.example.myapplication.Inicio;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import org.json.JSONObject;
 
 public class Inicio extends AppCompatActivity {
 
@@ -59,14 +57,6 @@ public class Inicio extends AppCompatActivity {
 
     }
 
-    public void weeklyAction(View view) {
-    }
-
-    public void previousMonthAction(View view) {
-    }
-
-    public void nextMonthAction(View view) {
-    }
 }
 
 
