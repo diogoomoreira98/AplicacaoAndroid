@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.example.myapplication.Inicio.Fragmentos.Calendario;
 import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.Reserva;
@@ -57,6 +59,14 @@ public class Inicio extends AppCompatActivity {
 
     }
 
+    public void weeklyAction(View view) {
+    }
+
+    public void previousMonthAction(View view) {
+    }
+
+    public void nextMonthAction(View view) {
+    }
 }
 
 
