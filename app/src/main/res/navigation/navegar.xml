@@ -25,4 +25,9 @@
         android:name="com.example.myapplication.Inicio.Fragmentos.Notificacoes"
         android:label="fragment_notificacoes"
         tools:layout="@layout/fragment_notificacoes" />
+    <fragment
+        android:id="@+id/v_mensal"
+        android:name="com.example.myapplication.Inicio.Fragmentos.v_mensal"
+        android:label="fragment_v_mensal"
+        tools:layout="@layout/fragment_v_mensal" />
 </navigation>

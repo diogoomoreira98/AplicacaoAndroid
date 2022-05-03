@@ -6,6 +6,8 @@ import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.mon
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +29,7 @@ public class Calendario extends Fragment implements CalendarAdapter.OnItemListen
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    Button next,back;
+    Button next,back,semanal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +55,17 @@ public class Calendario extends Fragment implements CalendarAdapter.OnItemListen
                 setMonthView();
             }
         });
+        semanal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment someFragment = new v_mensal();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainerView, someFragment ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
+            }
+        });
+
 
         return view;
     }
@@ -63,6 +76,7 @@ public class Calendario extends Fragment implements CalendarAdapter.OnItemListen
         monthYearText = view.findViewById(R.id.monthYearTV);
         next = (Button) view.findViewById(R.id.seguinte);
         back = (Button) view.findViewById(R.id.anterior);
+        semanal = (Button) view.findViewById(R.id.semanal);
     }
 
     private void setMonthView()
@@ -76,9 +90,7 @@ public class Calendario extends Fragment implements CalendarAdapter.OnItemListen
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
-    public void weeklyAction(View view) {
-        //Abrir novo fragemento(mudar tipo de visão)
-    }
+
 
     @Override
     public void onItemClick(int position, LocalDate date) {
