@@ -17,77 +17,81 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.276"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.103" />
+        app:layout_constraintVertical_bias="0.008" />
 
-    <EditText
-        android:id="@+id/editDate"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:onClick="popTimePicker"
         android:layout_width="340dp"
         android:layout_height="48dp"
         android:ems="10"
         android:hint="Data"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:onClick="popTimePicker"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.234" />
+        app:layout_constraintVertical_bias="0.152">
 
-    <EditText
-        android:id="@+id/editDate2"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
         android:layout_width="340dp"
         android:layout_height="48dp"
         android:ems="10"
-        android:hint="Título"
+        android:hint="Selecionar um centro"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:onClick="popTimePicker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.569" />
+        app:layout_constraintVertical_bias="0.453">
 
-    <EditText
-        android:id="@+id/editDate3"
-        android:layout_width="340dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Nº de Participantes"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:onClick="popTimePicker"
+        <AutoCompleteTextView
+            android:id="@+id/e_centro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="none"
+            android:textColor="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecione um centro"
+        android:textColor="@color/CorAzulEscura"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.734" />
+        app:layout_constraintVertical_bias="0.391" />
 
-    <EditText
-        android:id="@+id/editDate4"
-        android:layout_width="340dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Centro"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:onClick="popTimePicker"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.897" />
 
-    <EditText
-        android:id="@+id/editTime"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+
         android:layout_width="147dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -99,10 +103,18 @@
         app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.386" />
+        app:layout_constraintVertical_bias="0.304">
 
-    <EditText
-        android:id="@+id/editTime2"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+
+
         android:layout_width="147dp"
         android:layout_height="48dp"
         android:ems="10"
@@ -114,7 +126,13 @@
         app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.386" />
+        app:layout_constraintVertical_bias="0.304">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTime2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView2"
@@ -127,7 +145,7 @@
         app:layout_constraintHorizontal_bias="0.129"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.327" />
+        app:layout_constraintVertical_bias="0.248" />
 
     <TextView
         android:id="@+id/textView7"
@@ -140,7 +158,24 @@
         app:layout_constraintHorizontal_bias="0.126"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.185" />
+        app:layout_constraintVertical_bias="0.106" />
+
+    <EditText
+        android:id="@+id/editDate2"
+        android:layout_width="340dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="Título"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:onClick="popTimePicker"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.632" />
 
     <TextView
         android:id="@+id/textView6"
@@ -148,11 +183,30 @@
         android:layout_height="wrap_content"
         android:text="Selecione um título"
         android:textColor="@color/CorAzulEscura"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.56" />
+
+    <EditText
+        android:id="@+id/editDate3"
+        android:layout_width="340dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="Nº de Participantes"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:onClick="popTimePicker"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
     <TextView
         android:id="@+id/textView8"
@@ -160,27 +214,26 @@
         android:layout_height="wrap_content"
         android:text="Selecione o nº de participantes"
         android:textColor="@color/CorAzulEscura"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.66" />
+        app:layout_constraintVertical_bias="0.723" />
 
-    <TextView
-        android:id="@+id/textView9"
+    <Button
+        android:id="@+id/procurar_reserva"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selecione um centro"
-        android:textColor="@color/CorAzulEscura"
+        android:text="Procurar"
+        android:textColorLink="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.816" />
-
-
+        app:layout_constraintVertical_bias="0.939" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.example.myapplication.Inicio.Fragmentos;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,10 +11,13 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.example.myapplication.Login.Registo;
 import com.example.myapplication.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,8 +28,7 @@ public class Reserva extends Fragment {
     EditText date_in;
     EditText time_in;
     EditText time_in2;
-    Calendar calendar;
-    Calendar time;
+    AutoCompleteTextView autoCompleteTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +43,12 @@ public class Reserva extends Fragment {
         date_in.setInputType(InputType.TYPE_NULL);
         time_in.setInputType(InputType.TYPE_NULL);
         time_in2.setInputType(InputType.TYPE_NULL);
+
+        //Selecionar centro
+        autoCompleteTextView = view.findViewById(R.id.e_centro);
+        String[]option = {"Viseu", "Algarve", "Tondela","França"};
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(),R.layout.centros_item , option);
+        autoCompleteTextView.setAdapter(arrayAdapter);
         
         Calendar calendar= Calendar.getInstance();
         Calendar time = Calendar.getInstance();
@@ -50,7 +59,7 @@ public class Reserva extends Fragment {
                 calendar.set(Calendar.YEAR,year);
                 calendar.set(Calendar.MONTH,month);
                 calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-                
+
                 updateCalendar(calendar);
             }
         };
