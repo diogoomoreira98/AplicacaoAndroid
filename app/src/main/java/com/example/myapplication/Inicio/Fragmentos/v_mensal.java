@@ -3,15 +3,18 @@ package com.example.myapplication.Inicio.Fragmentos;
 import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.daysInWeekArray;
 import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.monthYearFromDate;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +32,7 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private ListView eventListView;
+    Button next,back,novaReserva;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +43,33 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
         initWidgets(view);
         setWeekView();
 
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
+                setWeekView();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
+                setWeekView();
+            }
+        });
+        novaReserva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Ao clicar no botão nova reserva mudar para outro fragmento:
+                Fragment someFragment = new Reserva();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainerView, someFragment ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
+            }
+        });
+
+
         return view;
     }
 
@@ -47,6 +78,9 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearTV);
         eventListView = view.findViewById(R.id.eventListView);
+        next = (Button) view.findViewById(R.id.seguinte1);
+        back = (Button) view.findViewById(R.id.anterior1);
+        novaReserva = (Button) view.findViewById(R.id.reservar);
     }
 
     private void setWeekView()
@@ -70,6 +104,15 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
 
     @Override
     public void onItemClick(int position, LocalDate date) {
-
+        CalendarUtils.selectedDate = date;
+        setWeekView();
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setEventAdpater();
+    }
+
 }
