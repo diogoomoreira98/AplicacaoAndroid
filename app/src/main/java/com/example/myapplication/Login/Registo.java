@@ -61,25 +61,23 @@ public class Registo extends AppCompatActivity {
             public void onClick(View v) {
                 //Validar campos
                 // mudar para atividade Inicio
-                if (checkDataEntered())
+              //  if (checkDataEntered())
+                if(true)
                 {
 
-                    String ROUTER = "/register";
-                    String URL = "http://176.79.161.72:5000"+ROUTER;
+                   // String ROUTER = "/auth/register";
+                    String URL = "http://176.79.161.72:5000/auth/register";//+ROUTER;
+
                     JSONObject request = new JSONObject();
 
                     try {
-                        request.put("username", nome.getText());
-                        request.put("email", nome.getText());
-                        request.put("centro", 1);
-                        request.put("confirm_password", c_password.getText());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    //este metodo ativa acesso a internet
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
+                        request.put("Nome", "diogo");
+                        request.put("Email", "diogo@gmail.com");
+                        request.put("IDCentro", 1);
+                        request.put("Password", "Escola1234?");
+
+
+
                             RequestQueue requestQueue = Volley.newRequestQueue(Registo.this);
                             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                     Request.Method.POST,
@@ -88,6 +86,7 @@ public class Registo extends AppCompatActivity {
                                     new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
+                                            Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
                                             if(response.opt("status").toString()=="success"){
                                                 //se o resgito se verficar entao entra na pagina principal
                                                 Intent mRegisto= new Intent(getApplicationContext(), Inicio.class);
@@ -95,21 +94,19 @@ public class Registo extends AppCompatActivity {
                                             }else{
                                                 Toast.makeText(getApplicationContext(), response.opt("data").toString(),Toast.LENGTH_LONG).show();
                                             }
-
-
                                         }
                                     }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(), error.toString(),Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
                                 }
                             }
                             );
                             requestQueue.add(jsonObjectRequest);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    });
-
-                }
 
             }
         });
