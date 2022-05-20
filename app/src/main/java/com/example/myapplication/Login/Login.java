@@ -24,6 +24,8 @@ import com.example.myapplication.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
 public class Login extends AppCompatActivity {
 
     @Override
@@ -33,68 +35,57 @@ public class Login extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.entrar);
         Button registo = (Button) findViewById(R.id.registar);
 
+        EditText email = (EditText)findViewById(R.id.loginEmail);
+        EditText password = (EditText)findViewById(R.id.loginPassword);
+        email.setText("admin@admin.com");
+        password.setText("Admin1234");
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EditText email = (EditText)findViewById(R.id.loginEmail);
                 EditText password = (EditText)findViewById(R.id.loginPassword);
 
 
-
-
-                if(true){
+                if(isEmail(email) && isPassword(password)){
                     //rest api login
-
-
-
                     String URL = "http://176.79.161.72:5000/auth/login";
                     JSONObject request = new JSONObject();
 
                     try {
-                        request.put("Email", "diogo@gmail.com");
-                        request.put("Password", "Escola12334?");
+                        request.put("Email", email.getText());
+                        request.put("Password", password.getText());
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), "Erro de envio de credenciais",Toast.LENGTH_LONG).show();
                         return;
                     }
-                    //este metodo ativa acesso a internet
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            RequestQueue requestQueue = Volley.newRequestQueue(Login.this);
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                    Request.Method.POST,
-                                    URL,
-                                    request,
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
 
-
-                                                String Token= response.optString("Token");
-
-                                                //se o sucesso se verficar entao entra na pagina principal
-                                                Intent mInicio = new Intent(getApplicationContext(), Inicio.class);
-                                                startActivity(mInicio);
-
-                                                Toast.makeText(getApplicationContext(), response.optString("msg"),Toast.LENGTH_LONG).show();
-
-
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getApplicationContext(), error.toString(),Toast.LENGTH_LONG).show();
-                                }
+                    RequestQueue requestQueue = Volley.newRequestQueue(Login.this);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        Request.Method.POST,
+                        URL,
+                        request,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                String token = response.optString("token");
+                                startActivity(new Intent(getApplicationContext(), Inicio.class));
+                                Toast.makeText(getApplicationContext(), response.optString("msg"),Toast.LENGTH_LONG).show();
                             }
-                            );
-                            requestQueue.add(jsonObjectRequest);
+                        }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject data = new JSONObject(responseBody);
+                                String message = data.optString("msg");
+                                Toast.makeText(getApplicationContext(), message ,Toast.LENGTH_LONG).show();
+                            } catch (UnsupportedEncodingException | JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
-
-
+                    requestQueue.add(jsonObjectRequest);
                 }
-
-
             }
         });
 
@@ -110,7 +101,7 @@ public class Login extends AppCompatActivity {
     //Verificar se o campo é email
     boolean isEmail(EditText text){
         CharSequence email = text.getText().toString();
-        return (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        return !(TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     //Verificar se o campo não está vazio
