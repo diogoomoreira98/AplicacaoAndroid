@@ -38,7 +38,7 @@ public class Reservas extends Fragment {
             }
         });
 
-        recyclerView = view.findViewById(R.id.listar_reservas);
+       // recyclerView = view.findViewById(R.id.listar_reservas);
 
         return view;
     }

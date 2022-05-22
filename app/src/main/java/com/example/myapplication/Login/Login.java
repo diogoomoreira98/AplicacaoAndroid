@@ -68,8 +68,14 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 String token = response.optString("token");
-                                startActivity(new Intent(getApplicationContext(), Inicio.class));
-                                Toast.makeText(getApplicationContext(), response.optString("msg"),Toast.LENGTH_LONG).show();
+                                boolean isDefault = response.optBoolean("isDefault");
+                                if(isDefault)
+                                {
+                                    startActivity(new Intent(getApplicationContext(), NovaPass.class));
+                                }else {
+                                    startActivity(new Intent(getApplicationContext(), Inicio.class));
+                                    Toast.makeText(getApplicationContext(), response.optString("msg"), Toast.LENGTH_LONG).show();
+                                }
                             }
                         }, new Response.ErrorListener() {
                         @Override
