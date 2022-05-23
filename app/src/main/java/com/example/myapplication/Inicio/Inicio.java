@@ -3,6 +3,7 @@ package com.example.myapplication.Inicio;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -47,6 +48,7 @@ public class Inicio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inicio);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, reservasFragment).commit();
 

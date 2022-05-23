@@ -2,7 +2,10 @@ package com.example.myapplication.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,6 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Login extends AppCompatActivity {
 
@@ -39,6 +45,42 @@ public class Login extends AppCompatActivity {
         EditText password = (EditText)findViewById(R.id.loginPassword);
         email.setText("admin@admin.com");
         password.setText("Admin1234");
+        Cursor cursor;
+
+
+        try {
+            SaveDataDbHelper dbHelper = new SaveDataDbHelper(Login.this);
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            String[] projection = {
+                    SaveDataContract.SaveData.ID_USER,
+                    SaveDataContract.SaveData.TOKEN,
+            };
+
+            cursor = db.query(
+                    SaveDataContract.SaveData.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            List dados = new ArrayList<>();
+            while(cursor.moveToNext()) {
+                long itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.ID_USER));
+                String token = cursor.getString(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.TOKEN));
+                dados.add(itemId);
+                dados.add(token);
+            }
+            cursor.close();
+            if(!dados.isEmpty()){
+                startActivity(new Intent(getApplicationContext(), Inicio.class));
+                Toast.makeText(getApplicationContext(), "Login efetuado com sucesso", Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -68,7 +110,16 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 String token = response.optString("token");
+                                String idUser = response.optJSONObject("data").optString("IDUtilizador");
                                 boolean isDefault = response.optBoolean("isDefault");
+
+                                SaveDataDbHelper dbHelper = new SaveDataDbHelper(Login.this);
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put(SaveDataContract.SaveData.ID_USER, idUser);
+                                values.put(SaveDataContract.SaveData.TOKEN, token);
+                                long newRowId = db.insert(SaveDataContract.SaveData.TABLE_NAME, null, values);
+
                                 if(isDefault)
                                 {
                                     startActivity(new Intent(getApplicationContext(), NovaPass.class));
