@@ -96,6 +96,7 @@ public class Login extends AppCompatActivity {
                     try {
                         request.put("Email", email.getText());
                         request.put("Password", password.getText());
+                        request.put("Remindme", true);
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), "Erro de envio de credenciais",Toast.LENGTH_LONG).show();
                         return;
@@ -132,10 +133,14 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             try {
+                                if(error.networkResponse!=null) {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject data = new JSONObject(responseBody);
                                 String message = data.optString("msg");
                                 Toast.makeText(getApplicationContext(), message ,Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(Login.this, "Erro de ligação ao servidor", Toast.LENGTH_LONG).show();
+                                }
                             } catch (UnsupportedEncodingException | JSONException e) {
                                 e.printStackTrace();
                             }
