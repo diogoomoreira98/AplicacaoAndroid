@@ -79,7 +79,7 @@ public class Inicio extends AppCompatActivity {
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkpermissions();
+
                 if(checkpermissions()) {
                     startActivity(new Intent(getApplicationContext(), ScannerActivity.class));
                 }

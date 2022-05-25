@@ -1,6 +1,7 @@
 package com.example.myapplication.Inicio.Fragmentos;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,33 +24,28 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Adapters.listar_reservas;
-import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.Inicio.models.ReservasModel;
-import com.example.myapplication.Login.Login;
-import com.example.myapplication.Login.NovaPass;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
-     SearchView searchView;
+
      RecyclerView recyclerView;
      LinearLayoutManager layoutManager;
      listar_reservas adapterReservas;
      Cursor cursor;
+     ArrayList<ReservasModel> reservas;
+     AlertDialog.Builder dialogBuilder;
+     AlertDialog dialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +91,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
                             JSONArray jsonArray = response.getJSONArray("data");
 
-                            ArrayList<ReservasModel> reservas= new ArrayList<>();
+                            reservas = new ArrayList<>();
 
                             if(jsonArray.length()==0){
                                 Toast.makeText(getContext(), "Não há reservas", Toast.LENGTH_SHORT).show();
@@ -156,7 +151,15 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
     @Override
     public void onRvClick(int position) {
-
-        Toast.makeText(getContext(),"Clicas-te aqui"+position , Toast.LENGTH_LONG).show();
+        createNewDialog();
+        final ReservasModel idreserva = reservas.get(position);
+        Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
+    }
+    public void createNewDialog(){
+        dialogBuilder = new AlertDialog.Builder(getActivity());
+        final View detalhePopup = getLayoutInflater().inflate(R.layout.detalhepopup,null);
+        dialogBuilder.setView(detalhePopup);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }
