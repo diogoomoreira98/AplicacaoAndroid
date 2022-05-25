@@ -253,11 +253,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/procurar_reserva"
+        android:id="@+id/verifica_disp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="Procurar"
+        android:text="Verificar disponibilidade"
         android:textColorLink="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
