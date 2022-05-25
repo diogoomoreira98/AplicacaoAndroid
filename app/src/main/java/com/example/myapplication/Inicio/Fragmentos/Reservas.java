@@ -1,6 +1,7 @@
 package com.example.myapplication.Inicio.Fragmentos;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,19 +25,24 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Adapters.listar_reservas;
+import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.Inicio.models.ReservasModel;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.VolleyAPI.CustomJsonRequest;
+import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Reservas extends Fragment implements listar_reservas.onRvListener{
-
 
      RecyclerView recyclerView;
      LinearLayoutManager layoutManager;
@@ -45,7 +51,6 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
      ArrayList<ReservasModel> reservas;
      AlertDialog.Builder dialogBuilder;
      AlertDialog dialog;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +67,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         Context context = getActivity();
 
         String URL = "http://176.79.161.72:5000/reservas/listbyuser";
-        JSONObject request = new JSONObject();
+        Map<String, String> request = new HashMap<String, String>();
 
         try {
             SaveDataDbHelper dbHelper = new SaveDataDbHelper(context);
@@ -80,9 +85,10 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         }
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                context,
                 Request.Method.POST,
-                URL,
+                "/reservas/listbyuser",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -127,18 +133,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                try {
-                    if(error.networkResponse!=null) {
-                        String responseBody = new String(error.networkResponse.data, "utf-8");
-                        JSONObject data = new JSONObject(responseBody);
-                        String message = data.optString("msg");
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(context, "Error de ligação ao servidor", Toast.LENGTH_LONG).show();
-                    }
-                } catch (UnsupportedEncodingException | JSONException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
             }
         });
 

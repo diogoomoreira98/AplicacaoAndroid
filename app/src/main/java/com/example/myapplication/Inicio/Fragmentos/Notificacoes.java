@@ -66,7 +66,8 @@ public class Notificacoes extends Fragment {
                 cursor.close();
                 if(!dados.isEmpty()){
                     int deletedRows = db.delete(SaveDataContract.SaveData.TABLE_NAME, null, null);
-                    startActivity(new Intent(getContext(), Login.class));
+                    //startActivity(new Intent(getContext(), Login.class));
+                    getActivity().finish();
                     Toast.makeText(getContext(), "Logout efetuado com sucesso", Toast.LENGTH_LONG).show();
                 }
             }
