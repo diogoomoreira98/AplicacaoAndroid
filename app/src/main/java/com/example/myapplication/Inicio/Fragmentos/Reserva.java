@@ -13,11 +13,13 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Inicio.Adapters.listar_reservas;
+import com.example.myapplication.Inicio.models.CentroModel;
 import com.example.myapplication.Inicio.models.ReservasModel;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
@@ -33,24 +37,27 @@ import com.example.myapplication.R;
 import com.example.myapplication.Utils.VolleyAPI.CustomJsonRequest;
 import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class Reserva extends Fragment {
 
     EditText date_in;
-    EditText time_in;
+    EditText time_in, editParticipantes,e_centro;
     EditText time_in2;
     Button btn_procurar;
     AutoCompleteTextView autoCompleteTextView;
     Cursor cursor;
-    ArrayList<ReservasModel> reservas;
+    List<CentroModel> centros;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,20 +68,70 @@ public class Reserva extends Fragment {
 
         date_in = view.findViewById(R.id.editDate);
         time_in = view.findViewById(R.id.editTime);
+        editParticipantes = view.findViewById(R.id.editParticipantes);
+        e_centro = view.findViewById(R.id.e_centro);
         time_in2 = view.findViewById(R.id.editTime2);
         btn_procurar = view.findViewById(R.id.verifica_disp);
         date_in.setInputType(InputType.TYPE_NULL);
         time_in.setInputType(InputType.TYPE_NULL);
         time_in2.setInputType(InputType.TYPE_NULL);
 
+
+
         //Selecionar centro
         autoCompleteTextView = view.findViewById(R.id.e_centro);
-        String[]option = {"Viseu", "Algarve", "Tondela","França"};
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(),R.layout.centros_item , option);
-        autoCompleteTextView.setAdapter(arrayAdapter);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final CentroModel idcentro = centros.get(i);
+                Toast.makeText(getContext(),""+idcentro.getidcentro() , Toast.LENGTH_LONG).show();
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(context, Request.Method.POST, "/centros/list", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try{
+
+                            JSONArray data = response.getJSONArray("data");
+
+                            for (int i=0; i < data.length(); i++) {
+                                String nome = data.getJSONObject(i).getString("Nome");
+                                int idcentro = Integer.parseInt(data.getJSONObject(i).getString("IDCentro"));
+
+                                centros.add(new CentroModel(idcentro, nome));
+                            }
+                            if (centros.size() > 0) {
+                                ArrayAdapter<CentroModel> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, centros);
+                                autoCompleteTextView.setAdapter(adapter);
+                            }
+
+                        }catch (Exception e){
+                            System.out.println(e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+        //fim selecionar centro
+
         
         Calendar calendar= Calendar.getInstance();
         Calendar time = Calendar.getInstance();
+
+        EditText centro = (EditText) view.findViewById(R.id.e_centro);
+        centro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         btn_procurar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,19 +139,15 @@ public class Reserva extends Fragment {
                 Map<String, String> request = new HashMap<String, String>();
 
                 try {
-                    SaveDataDbHelper dbHelper = new SaveDataDbHelper(context);
-                    SQLiteDatabase db = dbHelper.getReadableDatabase();
-                    String[] projection = {SaveDataContract.SaveData.ID_USER, SaveDataContract.SaveData.TOKEN,};
-                    cursor = db.query(SaveDataContract.SaveData.TABLE_NAME, projection, null, null, null, null, null);
-                    while(cursor.moveToNext()) {
-                        request.put("IDUtilizador",cursor.getInt(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.ID_USER))+"");
-                    }
-                    cursor.close();
-                    db.close();
+                    request.put("NParticipantes", editParticipantes.getText().toString());
+                    request.put("HoraInicio", time_in.getText().toString());
+                    request.put("HoraFim", time_in2.getText().toString());
+                    //request.put("IDCentro", e_centro.getClass(CentroModel.getnome()));
+                   // CentroModel centros = e_centro.getText();
+
                 }catch (Exception e){
                     System.out.println(e);
                 }
-
 
                 RequestQueue requestQueue = Volley.newRequestQueue(context);
                 CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(context, Request.Method.POST, "/reservas/validareserva", request,
@@ -102,6 +155,7 @@ public class Reserva extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 System.out.println(response);
+
                                 Toast.makeText(context, response.toString()+"", Toast.LENGTH_LONG).show();
                             }
                         }, new Response.ErrorListener() {

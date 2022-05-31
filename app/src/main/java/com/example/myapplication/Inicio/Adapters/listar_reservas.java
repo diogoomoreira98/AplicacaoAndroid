@@ -36,12 +36,6 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.listar_reservas,parent,false);
 
-       /* itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(itemView.getContext(),idreserva+"" , Toast.LENGTH_LONG).show();
-            }
-        });*/
 
         return new MyViewHolder(itemView,monRvListener);
     }
@@ -56,20 +50,6 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
         holder.centro.setText(model.get(position).getCentro());
         idreserva = model.get(position).getidreserva();
 
-
-            /*
-          holder.rvReservas.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent();
-                        //intent.setClass(context, SelecaoSalaActivity.class); //pagina para onde ir
-                        intent.putExtra("IDReserva",idreserva+"");
-                        Toast.makeText(v.getContext(), idreserva+"" , Toast.LENGTH_LONG).show();
-
-
-                    }
-                });*/
 
 
     }

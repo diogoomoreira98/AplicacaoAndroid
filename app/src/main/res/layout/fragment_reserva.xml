@@ -157,7 +157,6 @@
             android:hint="Centro"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:onClick="popTimePicker"
             android:visibility="visible">
 
             <AutoCompleteTextView
