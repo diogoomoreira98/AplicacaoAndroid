@@ -155,7 +155,7 @@
             android:layout_height="match_parent"
             android:ems="10"
             android:hint="Centro"
-            android:inputType="textPersonName"
+            android:inputType="none"
             android:minHeight="48dp"
             android:visibility="visible">
 

@@ -30,4 +30,9 @@
         android:name="com.example.myapplication.Inicio.Fragmentos.v_mensal"
         android:label="fragment_v_mensal"
         tools:layout="@layout/fragment_v_mensal" />
+    <fragment
+        android:id="@+id/verificarDisp"
+        android:name="com.example.myapplication.VerificarDisp"
+        android:label="fragment_verificar_disp"
+        tools:layout="@layout/fragment_verificar_disp" />
 </navigation>
