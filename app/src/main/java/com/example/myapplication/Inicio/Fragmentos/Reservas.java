@@ -93,15 +93,17 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
                         try {
 
                             JSONArray jsonArray = response.getJSONArray("data");
+                            if (jsonArray.length()<1){
+                                //Toast.makeText(getContext(), "Não há reservas", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
                             reservas = new ArrayList<>();
 
-                            if(jsonArray.length()==0){
-                                Toast.makeText(getContext(), "Não há reservas", Toast.LENGTH_SHORT).show();
-                            }
                             for (int i = 0; i < jsonArray.length();i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 int reserva = object.getInt("IDReserva");
