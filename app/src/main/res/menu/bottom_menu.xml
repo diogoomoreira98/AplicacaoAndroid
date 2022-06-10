@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_reservas" />
 
     <item
-        android:id="@+id/reserva"
+        android:id="@+id/escolherCentro"
         android:title="Reservar"
         android:icon="@drawable/ic_reservar" />
 

@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -53,15 +54,18 @@ import java.util.Map;
 public class Reserva extends Fragment {
 
     EditText date_in;
-    EditText time_in, editParticipantes,e_centro, titulo;
+    EditText time_in, editParticipantes, titulo;
     EditText time_in2;
     Button btn_procurar;
-    AutoCompleteTextView autoCompleteTextView;
-    int idcentro;
-    Cursor cursor;
-    List<CentroModel> listacentros= new ArrayList<>();
-  //  List<CentroModel> centros;
+    String IDCentro;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            IDCentro = getArguments().getString("IDCentro");
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +76,8 @@ public class Reserva extends Fragment {
         date_in = view.findViewById(R.id.editDate);
         time_in = view.findViewById(R.id.editTime);
         editParticipantes = view.findViewById(R.id.editParticipantes);
-        e_centro = view.findViewById(R.id.e_centro);
+
+
         titulo = view.findViewById(R.id.editTitulo);
         time_in2 = view.findViewById(R.id.editTime2);
         btn_procurar = view.findViewById(R.id.verifica_disp);
@@ -81,62 +86,7 @@ public class Reserva extends Fragment {
         time_in2.setInputType(InputType.TYPE_NULL);
 
 
-
-        //Selecionar centro
-        autoCompleteTextView = view.findViewById(R.id.e_centro);
-
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(context, Request.Method.POST, "/centros/list", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-
-                            JSONArray data = response.getJSONArray("data");
-
-
-                            for (int i=0; i < data.length(); i++) {
-                                String nome = data.getJSONObject(i).getString("Nome");
-                                int idcentro = Integer.parseInt(data.getJSONObject(i).getString("IDCentro"));
-
-                                listacentros.add(new CentroModel(idcentro, nome));
-                            }
-
-                                ArrayAdapter<CentroModel> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listacentros);
-                                autoCompleteTextView.setAdapter(adapter);
-
-                        }catch (Exception e){
-                            System.out.println(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        requestQueue.add(jsonObjectRequest);
-
-        autoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                CentroModel centroModel = listacentros.get(position);
-                //String result =  centroModel.getidcentro();
-                idcentro = centroModel.getidcentro();
-                Toast.makeText(context, idcentro+"", Toast.LENGTH_LONG).show();
-                //autoCompleteTextView.setText(result);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-
-        //fim selecionar centro
+        Toast.makeText(getContext(),""+IDCentro , Toast.LENGTH_LONG).show();
 
         
         Calendar calendar= Calendar.getInstance();
@@ -149,14 +99,16 @@ public class Reserva extends Fragment {
                 Map<String, String> request = new HashMap<String, String>();
 
                 try {
+                    String dataformatada = "20"+date_in.getText().toString().split("/")[2]+"-"+date_in.getText().toString().split("/")[0]+"-"+date_in.getText().toString().split("/")[1];
+                    String horainicio = dataformatada+"T"+time_in.getText()+":00.000Z";
+                    String horafim = dataformatada+"T"+time_in2.getText()+":00.000Z";
                     request.put("NParticipantes", editParticipantes.getText().toString());
-                    request.put("HoraInicio", time_in.getText().toString());
-                    request.put("HoraFim", time_in2.getText().toString());
+                    request.put("HoraInicio", horainicio);
+                    request.put("HoraFim", horafim);
                     request.put("Titulo", titulo.getText().toString());
-                    request.put("IDCentro", idcentro+"");
+                    request.put("IDCentro", IDCentro+"");
 
-                   // CentroModel centros = e_centro.getText();
-
+                //"2022-06-02T21:00:00.000Z"
                 }catch (Exception e){
                     System.out.println(e);
                 }
@@ -167,13 +119,11 @@ public class Reserva extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
 
-
                                 Bundle bundle = new Bundle();
-                                bundle.putString("NParticipantes", editParticipantes.getText().toString());
-                                bundle.putString("HoraInicio", time_in.getText().toString());
-                                bundle.putString("HoraFim", time_in2.getText().toString());
-                                bundle.putString("Titulo", titulo.getText().toString());
-                                bundle.putString("IDCentro", idcentro+"");
+                                for (Map.Entry<String, String> entry : request.entrySet()) {
+                                    bundle.putString(entry.getKey(), entry.getValue());
+                                }
+
 
                                 VerificarDisp fragInfo = new VerificarDisp();
                                 fragInfo.setArguments(bundle);
@@ -186,7 +136,12 @@ public class Reserva extends Fragment {
 
 
                                 System.out.println(response);
-                                Toast.makeText(context, response.toString()+"", Toast.LENGTH_LONG).show();
+                                try {
+                                    Toast.makeText(context, response.getString("msg"), Toast.LENGTH_LONG).show();
+                                }catch (Exception e){
+
+                                }
+
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -256,8 +211,6 @@ public class Reserva extends Fragment {
                 new TimePickerDialog(getContext(),timeSetListener2,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
             }
         });
-
-
 
 
         return view;

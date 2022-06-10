@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,15 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.myapplication.Inicio.Fragmentos.Calendario;
 import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
+import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.Fragmentos.Reserva;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +33,7 @@ public class Inicio extends AppCompatActivity {
     Reserva reservaFragment = new Reserva();
     Notificacoes notificacoesFragment = new Notificacoes();
     Calendario calendarioFragment = new Calendario();
+    EscolherCentro escolherCentroFragment = new EscolherCentro();
 
    //SCAN
     Button btnScan;
@@ -60,8 +59,8 @@ public class Inicio extends AppCompatActivity {
                    case R.id.reservas:
                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,reservasFragment).commit();
                        return true;
-                   case R.id.reserva:
-                       getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,reservaFragment).commit();
+                   case R.id.escolherCentro:
+                       getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,escolherCentroFragment).commit();
                        return true;
                    case R.id.notificacoes:
                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,notificacoesFragment).commit();
@@ -69,6 +68,7 @@ public class Inicio extends AppCompatActivity {
                    case R.id.calendario:
                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,calendarioFragment).commit();
                        return true;
+
                }
                return false;
            }

@@ -30,14 +30,17 @@
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/detalhepopup.xml" value="0.33" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/event_cell.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_calendario.xml" value="0.1" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_escolher_centro.xml" value="0.25271739130434784" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_notificacoes.xml" value="0.17831813576494426" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_reserva.xml" value="0.33" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_reservas.xml" value="0.33" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_verificar_disp.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/inicio.xml" value="0.25" />
-        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_reservas.xml" value="0.75" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_centros.xml" value="0.25271739130434784" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_reservas.xml" value="0.211139896373057" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/login.xml" value="0.25226449275362317" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/menu/bottom_menu.xml" value="0.1" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.217" />
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/drawable/search_view_bg.xml" value="0.2075" />
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/layout/fragment_reservas.xml" value="0.2" />
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/layout/inicio.xml" value="0.1762917933130699" />

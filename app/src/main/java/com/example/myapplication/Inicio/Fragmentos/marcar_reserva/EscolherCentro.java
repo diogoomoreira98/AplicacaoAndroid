@@ -1,31 +1,27 @@
-package com.example.myapplication.Inicio.Fragmentos;
+package com.example.myapplication.Inicio.Fragmentos.marcar_reserva;
 
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Inicio.Adapters.listar_reservas;
-import com.example.myapplication.Inicio.Inicio;
+import com.example.myapplication.Inicio.Adapters.listar_centros;
+import com.example.myapplication.Inicio.Fragmentos.Reserva;
+import com.example.myapplication.Inicio.Fragmentos.Reservas;
+import com.example.myapplication.Inicio.models.CentroModel;
 import com.example.myapplication.Inicio.models.ReservasModel;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
@@ -36,36 +32,33 @@ import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Reservas extends Fragment implements listar_reservas.onRvListener{
+public class EscolherCentro extends Fragment {
 
-     RecyclerView recyclerView;
-     LinearLayoutManager layoutManager;
-     listar_reservas adapterReservas;
-     Cursor cursor;
-     ArrayList<ReservasModel> reservas;
-     AlertDialog.Builder dialogBuilder;
-     AlertDialog dialog;
+    RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
+    Cursor cursor;
+    listar_centros adapterCentros;
+    ArrayList<CentroModel> centros;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_reservas, container, false);
+        View view =  inflater.inflate(R.layout.fragment_escolher_centro, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvReservas);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_centros);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
         Context context = getActivity();
-
         Map<String, String> request = new HashMap<String, String>();
 
         try {
@@ -87,7 +80,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
                 Request.Method.POST,
-                "/reservas/listbyuser",
+                "/centros/list",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -101,31 +94,23 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 return;
                             }
 
-                            reservas = new ArrayList<>();
+                            centros = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length();i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
-                                int reserva = object.getInt("IDReserva");
-                                String sala = object.getString("NomeSala").trim();
-                                String titulo = object.getString("Titulo").trim();
-                                String data = object.getString("HoraInicio").split("T")[0].trim();
-                                String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
-                                String horaFim = object.getString("HoraFim").split("T")[1].trim();
-                                String centro = object.getString("NomeCentro").trim();
+                                int centroID = object.getInt("IDCentro");
+                                String nomeCentro = object.getString("Nome").trim();
+                                String moradaCentro = object.getString("Morada").trim();
 
-                                reservas.add(new ReservasModel(
-                                                reserva,
-                                                titulo,
-                                                data,
-                                                sala,
-                                                horaInicio,
-                                                horaFim,
-                                                centro
+                                centros.add(new CentroModel(
+                                        centroID,
+                                        nomeCentro,
+                                        moradaCentro
                                         )
                                 );
                             }
-                            adapterReservas= new listar_reservas(getContext(),reservas,Reservas.this::onRvClick);
-                            recyclerView.setAdapter(adapterReservas);
+                            adapterCentros= new listar_centros(getContext(),centros, EscolherCentro.this::onRvClick);
+                            recyclerView.setAdapter(adapterCentros);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -138,24 +123,24 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
 
-
-
         requestQueue.add(jsonObjectRequest);
+
+        //Fim de listar centros
+
+
 
         return view;
     }
 
-    @Override
-    public void onRvClick(int position) {
-        createNewDialog();
-        final ReservasModel idreserva = reservas.get(position);
-        Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
-    }
-    public void createNewDialog(){
-        dialogBuilder = new AlertDialog.Builder(getActivity());
-        final View detalhePopup = getLayoutInflater().inflate(R.layout.detalhepopup,null);
-        dialogBuilder.setView(detalhePopup);
-        dialog = dialogBuilder.create();
-        dialog.show();
+    private void onRvClick(int position) {
+        Reserva reservaFragment = new Reserva();
+        final CentroModel idcentro = centros.get(position);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("IDCentro", idcentro.getidcentro()+"");
+        reservaFragment.setArguments(bundle);
+
+       // Toast.makeText(getContext(),""+idcentro.getidcentro() , Toast.LENGTH_LONG).show();
+        getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,reservaFragment).commit();
     }
 }

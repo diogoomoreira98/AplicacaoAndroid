@@ -4,11 +4,12 @@ public class CentroModel {
 
     int idcentro;
     String  nome;
+    String morada;
 
-
-    public CentroModel(int idcentro, String nome) {
+    public CentroModel(int idcentro, String nome, String morada) {
         this.idcentro = idcentro;
         this.nome = nome;
+        this.morada = morada;
     }
 
     public int getidcentro() {
@@ -27,9 +28,13 @@ public class CentroModel {
         this.nome = nome;
     }
 
-    @Override
-    public String toString() {
-        return this.nome;
+    public String getmorada() {
+        return morada;
     }
+
+    public void setmorada(String nome) {
+        this.morada = morada;
+    }
+
 
 }

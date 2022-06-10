@@ -35,4 +35,9 @@
         android:name="com.example.myapplication.Inicio.Fragmentos.VerificarDisp"
         android:label="fragment_verificar_disp"
         tools:layout="@layout/fragment_verificar_disp" />
+    <fragment
+        android:id="@+id/escolherCentro"
+        android:name="com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro"
+        android:label="fragment_escolher_centro"
+        tools:layout="@layout/fragment_escolher_centro" />
 </navigation>
