@@ -120,8 +120,13 @@ public class Reserva extends Fragment {
                             public void onResponse(JSONObject response) {
 
                                 Bundle bundle = new Bundle();
-                                for (Map.Entry<String, String> entry : request.entrySet()) {
-                                    bundle.putString(entry.getKey(), entry.getValue());
+                                try {
+                                    for (Map.Entry<String, String> entry : request.entrySet()) {
+                                        bundle.putString(entry.getKey(), entry.getValue());
+                                    }
+                                    bundle.putString("response", response.getJSONArray("data").toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
 
 
