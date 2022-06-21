@@ -19,6 +19,7 @@ import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.Fragmentos.Reserva;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
+import com.example.myapplication.Inicio.Fragmentos.v_mensal;
 import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -30,9 +31,8 @@ public class Inicio extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     Reservas reservasFragment = new Reservas();
-    Reserva reservaFragment = new Reserva();
     Notificacoes notificacoesFragment = new Notificacoes();
-    Calendario calendarioFragment = new Calendario();
+    v_mensal calendarioFragment = new v_mensal();
     EscolherCentro escolherCentroFragment = new EscolherCentro();
 
    //SCAN

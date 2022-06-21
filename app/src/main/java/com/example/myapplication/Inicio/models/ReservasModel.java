@@ -2,7 +2,7 @@ package com.example.myapplication.Inicio.models;
 
 public class ReservasModel {
 
-    int idreserva;
+    int idreserva,participantes;
     String  titulo;
     String data;
     String sala;
@@ -11,7 +11,7 @@ public class ReservasModel {
     String centro;
     String idSala;
 
-    public ReservasModel(int idreserva, String titulo, String data, String sala, String horaInicio, String horaFim, String centro) {
+    public ReservasModel(int idreserva, String titulo, String data, String sala, String horaInicio, String horaFim, String centro, int participantes) {
         this.idreserva = idreserva;
         this.titulo = titulo;
         this.data = data;
@@ -19,6 +19,7 @@ public class ReservasModel {
         this.horaInicio = horaInicio;
         this.horaFim = horaFim;
         this.centro = centro;
+        this.participantes = participantes;
     }
 
 
@@ -84,6 +85,12 @@ public class ReservasModel {
 
     public void setCentro(String centro) {
         this.centro = centro;
+    }
+
+    public int getParticipantes() {return participantes; }
+
+    public void setParticipantes(int centro) {
+        this.participantes = participantes;
     }
 
 

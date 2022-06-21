@@ -39,7 +39,7 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_v_mensal, container, false);
-
+        CalendarUtils.selectedDate = LocalDate.now();
         initWidgets(view);
         setWeekView();
 

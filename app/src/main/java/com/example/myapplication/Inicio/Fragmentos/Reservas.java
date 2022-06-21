@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,6 +53,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
      ArrayList<ReservasModel> reservas;
      AlertDialog.Builder dialogBuilder;
      AlertDialog dialog;
+     TextView editDate,editTime,editTime2,editTitulo,editParticipantes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +115,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
                                 String horaFim = object.getString("HoraFim").split("T")[1].trim();
                                 String centro = object.getString("NomeCentro").trim();
+                                int participantes = object.getInt("NParticipantes");
 
                                 reservas.add(new ReservasModel(
                                                 reserva,
@@ -120,7 +124,8 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                                 sala,
                                                 horaInicio,
                                                 horaFim,
-                                                centro
+                                                centro,
+                                                participantes
                                         )
                                 );
                             }
@@ -138,24 +143,103 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
 
-
-
         requestQueue.add(jsonObjectRequest);
+
 
         return view;
     }
 
     @Override
     public void onRvClick(int position) {
-        createNewDialog();
+        createNewDialog(position);
         final ReservasModel idreserva = reservas.get(position);
         Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
     }
-    public void createNewDialog(){
+
+    public void editar_reserva(){
+       /*
+        Map<String, String> request = new HashMap<String, String>();
+
+        request.put("IDSala", idsala.getIdsala()+"");
+        request.put("Titulo", Titulo);
+        request.put("NParticipantes", NParticipantes);
+        request.put("HoraInicio", HoraInicio);
+        request.put("HoraFim", HoraFim);
+
+        Context context = getActivity();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                context,
+                Request.Method.POST,
+                "/reservas/update",
+                request,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+
+                            Reservas InicioFragment = new Reservas();
+                            getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            dialog.cancel();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+        */
+    }
+
+    public void inativar_reserva() {
+
+    }
+
+
+
+    public void createNewDialog(int position){
         dialogBuilder = new AlertDialog.Builder(getActivity());
         final View detalhePopup = getLayoutInflater().inflate(R.layout.detalhepopup,null);
         dialogBuilder.setView(detalhePopup);
         dialog = dialogBuilder.create();
         dialog.show();
+
+        editDate = (TextView) detalhePopup.findViewById(R.id.editDate);
+        editTime = (TextView) detalhePopup.findViewById(R.id.editTime);
+        editTime2 = (TextView) detalhePopup.findViewById(R.id.editTime2);
+        editTitulo = (TextView) detalhePopup.findViewById(R.id.editTitulo);
+        editParticipantes= (TextView) detalhePopup.findViewById(R.id.editParticipantes);
+        Button btn_editar = (Button) detalhePopup.findViewById(R.id.btn_edit);
+        Button btn_inativar = (Button) detalhePopup.findViewById(R.id.btn_ina);
+
+        final ReservasModel data = reservas.get(position);
+
+        editDate.setText(""+data.getData());
+        editTime.setText(data.getHoraInicio().toString().split(":")[0] + ":" + data.getHoraInicio().toString().split(":")[1]);
+        editTime2.setText(data.getHoraFim().toString().split(":")[0]+ ":" + data.getHoraFim().toString().split(":")[1]);
+        editTitulo.setText(""+data.getTitulo());
+        editParticipantes.setText(""+data.getParticipantes());
+
+        btn_editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Botão para editar a reserva
+                editar_reserva();
+            }
+        });
+        btn_inativar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Botão para inativar
+                inativar_reserva();
+
+            }
+        });
+
     }
 }
