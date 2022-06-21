@@ -3,7 +3,6 @@ package com.example.myapplication.Inicio;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
@@ -14,10 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.example.myapplication.Inicio.Fragmentos.Calendario;
+
 import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
-import com.example.myapplication.Inicio.Fragmentos.Reserva;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.Inicio.Fragmentos.v_mensal;
 import com.example.myapplication.R;
