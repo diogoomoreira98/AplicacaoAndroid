@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 public class Reservas extends Fragment implements listar_reservas.onRvListener{
@@ -66,6 +69,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
      AlertDialog dialog;
      TextView editDate,editTime,editTime2,editTitulo,editParticipantes;
      String status;
+     long tempo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,7 +140,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date currentTime = Calendar.getInstance().getTime();
 
                                 if(datafim.getTime() >= currentTime.getTime() ){
-
+                                    String idsala = object.getString("IDSala").trim();
                                     if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
                                          status = "A decorrer";
 
@@ -150,6 +154,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                                     reserva,
                                                     titulo,
                                                     data,
+                                                    idsala,
                                                     sala,
                                                     horaInicio,
                                                     horaFim,
@@ -197,12 +202,20 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
         Map<String, String> request = new HashMap<String, String>();
         final int idreserva = reservas.get(position).getidreserva();
+        final String idsala = reservas.get(position).getIdSala();
         Context context = getActivity();
 
         String dataformatada = editDate.getText().toString();
         String horainicio = dataformatada+"T"+editTime.getText()+":00.000Z";
         String horafim = dataformatada+"T"+editTime2.getText()+":00.000Z";
+        /*
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+        df.setTimeZone(tz);
+        String hora_fimAsISO = df.format(hora_fim);
+        */
         request.put("IDReserva", idreserva+"");
+        request.put("IDSala", idsala+"");
         request.put("Titulo", editTitulo.getText().toString());
         request.put("NParticipantes", editParticipantes.getText().toString());
         request.put("HoraInicio", horainicio);
@@ -237,26 +250,22 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
 
     }
-    public void aumentar_tempo(int position){
+    public void aumentar_tempo(int position, long tempo) {
+
+
         Map<String, String> request = new HashMap<String, String>();
         final int idreserva = reservas.get(position).getidreserva();
         final ReservasModel data = reservas.get(position);
         Context context = getActivity();
 
-        String dataformatada = editDate.getText().toString();
-        String horainicio = dataformatada+"T"+data.getData()+":00.000Z";
-        String horafim = dataformatada+"T"+data.getData()+":00.000Z";
         request.put("IDReserva", idreserva+"");
-        request.put("Titulo", data.getTitulo());
-        request.put("NParticipantes", data.getParticipantes()+"");
-        request.put("HoraInicio", horainicio);
-        request.put("HoraFim", horafim);
+        request.put("Tempo", tempo+"");
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
                 Request.Method.PUT,
-                "/reservas/edit",
+                "/reservas/prolongar",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -264,9 +273,9 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                         try {
                             Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
 
-                            Reservas InicioFragment = new Reservas();
-                            getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
-                            dialog.cancel();
+                           // Reservas InicioFragment = new Reservas();
+                           // getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            //dialog.cancel();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -278,6 +287,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
         requestQueue.add(jsonObjectRequest);
+
 
     }
 
@@ -294,10 +304,41 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         Button btn_cancel = (Button) detalhePopup2.findViewById(R.id.btn_cancel);
         Button btn_confirm = (Button) detalhePopup2.findViewById(R.id.btn_confirm);
 
+        RadioGroup radioGroup = (RadioGroup) detalhePopup2.findViewById(R.id.radiogroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // find which radio button is selected
+                if(checkedId == R.id.radioButton) {
+                    tempo = 10;
+                    Toast.makeText(getActivity().getApplicationContext(), "choice: 10",
+                            Toast.LENGTH_SHORT).show();
+                } else if(checkedId == R.id.radioButton2) {
+                    tempo = 15;
+                    Toast.makeText(getActivity().getApplicationContext(), "choice: 15",
+                            Toast.LENGTH_SHORT).show();
+                } else if(checkedId == R.id.radioButton3){
+                    tempo = 20;
+                    Toast.makeText(getActivity().getApplicationContext(), "choice: 20",
+                            Toast.LENGTH_SHORT).show();
+                } else if(checkedId == R.id.radioButton4){
+                    tempo = 25;
+                    Toast.makeText(getActivity().getApplicationContext(), "choice: 25",
+                            Toast.LENGTH_SHORT).show();
+                } else if(checkedId == R.id.radioButton5){
+                    tempo = 30;
+                    Toast.makeText(getActivity().getApplicationContext(), "choice: 30",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                aumentar_tempo(position);
+                aumentar_tempo(position, tempo);
             }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {

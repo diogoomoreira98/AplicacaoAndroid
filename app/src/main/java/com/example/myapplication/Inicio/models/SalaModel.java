@@ -18,7 +18,7 @@ public class SalaModel {
         }
 
         public int getIdsala() { return idsala; }
-        public void setidsala(int idcentro) { this.idsala = idsala; }
+        public void setidsala(int idsala) { this.idsala = idsala; }
 
         public String getNome() {
         return nome;

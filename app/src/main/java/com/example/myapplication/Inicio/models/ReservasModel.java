@@ -11,10 +11,11 @@ public class ReservasModel {
     String centro;
     String idSala,status;
 
-    public ReservasModel(int idreserva, String titulo, String data, String sala, String horaInicio, String horaFim, String centro, int participantes, String status) {
+    public ReservasModel(int idreserva, String titulo, String data, String idSala, String sala, String horaInicio, String horaFim, String centro, int participantes, String status) {
         this.idreserva = idreserva;
         this.titulo = titulo;
         this.data = data;
+        this.idSala = idSala;
         this.sala = sala;
         this.horaInicio = horaInicio;
         this.horaFim = horaFim;
