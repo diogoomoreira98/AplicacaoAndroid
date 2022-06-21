@@ -1,6 +1,7 @@
 package com.example.myapplication.Inicio.Fragmentos;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Adapters.listar_centros;
 import com.example.myapplication.Inicio.Adapters.listar_salas;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
+import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.Inicio.models.CentroModel;
 import com.example.myapplication.Inicio.models.SalaModel;
 import com.example.myapplication.R;
@@ -115,7 +117,7 @@ public class VerificarDisp extends Fragment {
          */
         Map<String, String> request = new HashMap<String, String>();
 
-        request.put("IDSala", idsala+"");
+        request.put("IDSala", idsala.getIdsala()+"");
         request.put("Titulo", Titulo);
         request.put("NParticipantes", NParticipantes);
         request.put("HoraInicio", HoraInicio);
@@ -133,6 +135,10 @@ public class VerificarDisp extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+
+                            Reservas InicioFragment = new Reservas();
+                            getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            dialog.cancel();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -148,6 +154,7 @@ public class VerificarDisp extends Fragment {
 
     private void onRvClick(int position) {
         idsala = listaSalas.get(position);
+       // Toast.makeText(getContext(),""+idsala.getIdsala() , Toast.LENGTH_LONG).show();
         createNewDialog(idsala);
     }
     public void createNewDialog(SalaModel idsala){

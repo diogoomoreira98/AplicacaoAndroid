@@ -14,12 +14,10 @@ public class SalaModel {
             this.nome = nome;
             this.duracaolimpeza = duracaolimpeza;
             this.nmaxutentes = nmaxutentes;
-
             this.alocacaomaxima = alocacaomaxima;
-
         }
 
-        public int idsala() { return idsala; }
+        public int getIdsala() { return idsala; }
         public void setidsala(int idcentro) { this.idsala = idsala; }
 
         public String getNome() {
