@@ -2,9 +2,16 @@ package com.example.myapplication.Inicio.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Inicio.models.ReservasModel;
 import com.example.myapplication.R;
 
+import java.util.Date;
 import java.util.List;
 
 public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyViewHolder> {
@@ -49,8 +57,12 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
         holder.horaFim.setText(model.get(position).getHoraFim());
         holder.centro.setText(model.get(position).getCentro());
         idreserva = model.get(position).getidreserva();
-
-
+        holder.info.setText(model.get(position).getStatus());
+        if(model.get(position).getStatus() == "A decorrer"){
+            holder.info.setTextColor(Color.parseColor("#FF4F33"));
+        }else {
+            holder.info.setTextColor(Color.parseColor("#36FF33"));
+        }
 
     }
 
@@ -61,7 +73,7 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
 
     static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView titulo,data,sala,horaInicio,horaFim,centro;
+        TextView titulo,data,sala,horaInicio,horaFim,centro,info;
         RecyclerView rvReservas;
         onRvListener onRvListener;
 
@@ -74,6 +86,7 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
             horaInicio = itemView.findViewById(R.id.txt_inicio);
             horaFim = itemView.findViewById(R.id.txt_fim);
             centro = itemView.findViewById(R.id.txt_centro);
+            info = itemView.findViewById(R.id.txt_info);
             rvReservas = itemView.findViewById(R.id.rvReservas);
 
             this.onRvListener = onRvListener;

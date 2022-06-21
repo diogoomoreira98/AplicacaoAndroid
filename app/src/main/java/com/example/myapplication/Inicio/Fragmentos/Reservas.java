@@ -3,6 +3,9 @@ package com.example.myapplication.Inicio.Fragmentos;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Adapters.listar_reservas;
 import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.Inicio.models.ReservasModel;
+import com.example.myapplication.Inicio.models.SalaModel;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
@@ -39,8 +45,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -54,6 +65,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
      AlertDialog.Builder dialogBuilder;
      AlertDialog dialog;
      TextView editDate,editTime,editTime2,editTitulo,editParticipantes;
+     String status;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,6 +119,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                             reservas = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length();i++) {
+
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 int reserva = object.getInt("IDReserva");
                                 String sala = object.getString("NomeSala").trim();
@@ -117,22 +130,40 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 String centro = object.getString("NomeCentro").trim();
                                 int participantes = object.getInt("NParticipantes");
 
-                                reservas.add(new ReservasModel(
-                                                reserva,
-                                                titulo,
-                                                data,
-                                                sala,
-                                                horaInicio,
-                                                horaFim,
-                                                centro,
-                                                participantes
-                                        )
-                                );
+
+                                Date datainicio = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraInicio"));
+                                Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
+                                Date currentTime = Calendar.getInstance().getTime();
+
+                                if(datafim.getTime() >= currentTime.getTime() ){
+
+                                    if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
+                                         status = "A decorrer";
+
+                                    }
+                                    else
+                                    {
+                                        status = "Em breve";
+                                    }
+
+                                    reservas.add(new ReservasModel(
+                                                    reserva,
+                                                    titulo,
+                                                    data,
+                                                    sala,
+                                                    horaInicio,
+                                                    horaFim,
+                                                    centro,
+                                                    participantes,
+                                                    status
+                                            )
+                                    );
+                                }
                             }
                             adapterReservas= new listar_reservas(getContext(),reservas,Reservas.this::onRvClick);
                             recyclerView.setAdapter(adapterReservas);
 
-                        } catch (JSONException e) {
+                        } catch (JSONException | ParseException e) {
                             e.printStackTrace();
                         }
                     }
@@ -151,27 +182,37 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
     @Override
     public void onRvClick(int position) {
-        createNewDialog(position);
+        if(reservas.get(position).getStatus() == "A decorrer"){
+            createNewDialogAumentar(position);
+        }else
+        {
+            createNewDialog(position);
+        }
+
         final ReservasModel idreserva = reservas.get(position);
         Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
     }
 
-    public void editar_reserva(){
-       /*
+    public void editar_reserva(int position){
+
         Map<String, String> request = new HashMap<String, String>();
-
-        request.put("IDSala", idsala.getIdsala()+"");
-        request.put("Titulo", Titulo);
-        request.put("NParticipantes", NParticipantes);
-        request.put("HoraInicio", HoraInicio);
-        request.put("HoraFim", HoraFim);
-
+        final int idreserva = reservas.get(position).getidreserva();
         Context context = getActivity();
+
+        String dataformatada = editDate.getText().toString();
+        String horainicio = dataformatada+"T"+editTime.getText()+":00.000Z";
+        String horafim = dataformatada+"T"+editTime2.getText()+":00.000Z";
+        request.put("IDReserva", idreserva+"");
+        request.put("Titulo", editTitulo.getText().toString());
+        request.put("NParticipantes", editParticipantes.getText().toString());
+        request.put("HoraInicio", horainicio);
+        request.put("HoraFim", horafim);
+
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.POST,
-                "/reservas/update",
+                Request.Method.PUT,
+                "/reservas/edit",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -193,13 +234,80 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
         requestQueue.add(jsonObjectRequest);
-        */
+
+
+    }
+    public void aumentar_tempo(int position){
+        Map<String, String> request = new HashMap<String, String>();
+        final int idreserva = reservas.get(position).getidreserva();
+        final ReservasModel data = reservas.get(position);
+        Context context = getActivity();
+
+        String dataformatada = editDate.getText().toString();
+        String horainicio = dataformatada+"T"+data.getData()+":00.000Z";
+        String horafim = dataformatada+"T"+data.getData()+":00.000Z";
+        request.put("IDReserva", idreserva+"");
+        request.put("Titulo", data.getTitulo());
+        request.put("NParticipantes", data.getParticipantes()+"");
+        request.put("HoraInicio", horainicio);
+        request.put("HoraFim", horafim);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                context,
+                Request.Method.PUT,
+                "/reservas/edit",
+                request,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+
+                            Reservas InicioFragment = new Reservas();
+                            getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            dialog.cancel();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+
     }
 
     public void inativar_reserva() {
-
+//IDReserva, IDSala, IDCentro, IDUtilizador, Titulo, NParticipantes, HoraInicio, HoraFim, Active
     }
 
+    public void createNewDialogAumentar(int position) {
+        dialogBuilder = new AlertDialog.Builder(getActivity());
+        final View detalhePopup2 = getLayoutInflater().inflate(R.layout.aumentar_popup,null);
+        dialogBuilder.setView(detalhePopup2);
+        dialog = dialogBuilder.create();
+        dialog.show();
+        Button btn_cancel = (Button) detalhePopup2.findViewById(R.id.btn_cancel);
+        Button btn_confirm = (Button) detalhePopup2.findViewById(R.id.btn_confirm);
+
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aumentar_tempo(position);
+            }
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+
+    }
 
 
     public void createNewDialog(int position){
@@ -225,11 +333,72 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         editTitulo.setText(""+data.getTitulo());
         editParticipantes.setText(""+data.getParticipantes());
 
+
+        Calendar calendar= Calendar.getInstance();
+        Calendar time = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR,year);
+                calendar.set(Calendar.MONTH,month);
+                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+
+                updateCalendar(calendar);
+            }
+        };
+
+        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                time.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                time.set(Calendar.MINUTE,minute);
+                // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                //time_in.setText(simpleDateFormat.format(calendar));
+                updateTime(time);
+            }
+        };
+
+        TimePickerDialog.OnTimeSetListener timeSetListener2 = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                time.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                time.set(Calendar.MINUTE,minute);
+                // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                //time_in.setText(simpleDateFormat.format(calendar));
+                updateTime2(time);
+            }
+        };
+
+
+        editDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),date,calendar.get(calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        editTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getContext(),timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+            }
+        });
+
+        editTime2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getContext(),timeSetListener2,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+            }
+        });
+
+
+
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Botão para editar a reserva
-                editar_reserva();
+                editar_reserva(position);
             }
         });
         btn_inativar.setOnClickListener(new View.OnClickListener() {
@@ -241,5 +410,26 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
 
+    }
+
+    private void updateTime(Calendar calendar2) {
+        String Format = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
+
+        editTime.setText(sdf.format(calendar2.getTime()));
+    }
+
+    private void updateTime2(Calendar calendar3) {
+        String Format = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(Format,Locale.US);
+
+        editTime2.setText(sdf.format(calendar3.getTime()));
+    }
+
+    private void updateCalendar(Calendar calendar1) {
+        String Format = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(Format,Locale.US);
+
+        editDate.setText(sdf.format(calendar1.getTime()));
     }
 }

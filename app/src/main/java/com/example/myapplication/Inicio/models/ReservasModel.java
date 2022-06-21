@@ -9,9 +9,9 @@ public class ReservasModel {
     String horaInicio;
     String horaFim;
     String centro;
-    String idSala;
+    String idSala,status;
 
-    public ReservasModel(int idreserva, String titulo, String data, String sala, String horaInicio, String horaFim, String centro, int participantes) {
+    public ReservasModel(int idreserva, String titulo, String data, String sala, String horaInicio, String horaFim, String centro, int participantes, String status) {
         this.idreserva = idreserva;
         this.titulo = titulo;
         this.data = data;
@@ -20,6 +20,7 @@ public class ReservasModel {
         this.horaFim = horaFim;
         this.centro = centro;
         this.participantes = participantes;
+        this.status = status;
     }
 
 
@@ -93,6 +94,12 @@ public class ReservasModel {
         this.participantes = participantes;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

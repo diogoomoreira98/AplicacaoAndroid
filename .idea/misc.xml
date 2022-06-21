@@ -25,6 +25,7 @@
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/drawable/ic_qr_code_svgrepo_com.xml" value="0.1" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/activity_nova_pass.xml" value="0.25" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/activity_scanner.xml" value="0.24682971014492755" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/aumentar_popup.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/calendar_cell.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/centros_item.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/confirmar_popup.xml" value="0.2798913043478261" />
@@ -39,7 +40,7 @@
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/fragment_verificar_disp.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/inicio.xml" value="0.25" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_centros.xml" value="0.25271739130434784" />
-        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_reservas.xml" value="0.211139896373057" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_reservas.xml" value="0.33" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/listar_salas.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/login.xml" value="0.25226449275362317" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/menu/bottom_menu.xml" value="0.1" />

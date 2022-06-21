@@ -69,7 +69,6 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
             }
         });
 
-
         return view;
     }
 
@@ -100,7 +99,6 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
         EventAdapter eventAdapter = new EventAdapter(this.getContext(), dailyEvents);
         eventListView.setAdapter(eventAdapter);
     }
-
 
     @Override
     public void onItemClick(int position, LocalDate date) {
