@@ -1,10 +1,10 @@
 package com.example.myapplication.Inicio.Fragmentos;
 
+import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.daysInMonthArray;
 import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.daysInWeekArray;
 import static com.example.myapplication.Inicio.CalendarClasses.CalendarUtils.monthYearFromDate;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -28,11 +29,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Adapters.listar_por_dia;
-import com.example.myapplication.Inicio.Adapters.listar_reservas;
 import com.example.myapplication.Inicio.CalendarClasses.CalendarAdapter;
 import com.example.myapplication.Inicio.CalendarClasses.CalendarUtils;
-import com.example.myapplication.Inicio.CalendarClasses.Event;
-import com.example.myapplication.Inicio.CalendarClasses.EventAdapter;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.models.ReservasModel;
 import com.example.myapplication.Login.SaveDataContract;
@@ -58,12 +56,14 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    private ListView eventListView;
+    private RecyclerView eventListView;
     Button next,back,novaReserva;
+    LinearLayoutManager layoutManager;
     Cursor cursor;
     ArrayList<ReservasModel> reservas;
-    String status;
+    String status= "Active";
     listar_por_dia adapterReservas;
+    String selectedDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,10 +107,15 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
     {
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearTV);
-        eventListView = view.findViewById(R.id.eventListView);
+        eventListView = view.findViewById(R.id.rv_listarpordia);
         next = (Button) view.findViewById(R.id.seguinte1);
         back = (Button) view.findViewById(R.id.anterior1);
         novaReserva = (Button) view.findViewById(R.id.reservar);
+
+        eventListView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        eventListView.setLayoutManager(layoutManager);
     }
 
     private void setWeekView()
@@ -118,6 +123,7 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
+        selectedDate = CalendarUtils.selectedDate+"";
         CalendarAdapter calendarAdapter = new CalendarAdapter(days, this);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
@@ -155,8 +161,10 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
             cursor = db.query(SaveDataContract.SaveData.TABLE_NAME, projection, null, null, null, null, null);
             while(cursor.moveToNext()) {
                 request.put("IDUtilizador",cursor.getInt(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.ID_USER))+"");
-                request.put("token",cursor.getString(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.TOKEN)));
+
             }
+            request.put("Data",selectedDate);
+
             cursor.close();
             db.close();
         }catch (Exception e){
@@ -166,65 +174,52 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.GET,
+                Request.Method.POST,
                 "/reservas/listbydia",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                      //  Toast.makeText(getContext(), response+"", Toast.LENGTH_SHORT).show();
                         try {
 
                             JSONArray jsonArray = response.getJSONArray("data");
                             if (jsonArray.length()<1){
-                                //Toast.makeText(getContext(), "Não há reservas", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                                reservas = new ArrayList<>();
+                                Toast.makeText(getContext(), "Não há reservas", Toast.LENGTH_SHORT).show();
+                            }else{
+                                reservas = new ArrayList<>();
 
-                            reservas = new ArrayList<>();
+                                for (int i = 0; i < jsonArray.length();i++) {
 
-                            for (int i = 0; i < jsonArray.length();i++) {
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    int reserva = object.getInt("IDReserva");
+                                    String sala = object.getString("NomeSala").trim();
+                                    String idsala = object.getString("IDSala").trim();
+                                    String titulo = object.getString("Titulo").trim();
+                                    String data = object.getString("HoraInicio").split("T")[0].trim();
+                                    String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
+                                    String horaFim = object.getString("HoraFim").split("T")[1].trim();
+                                    String centro = object.getString("NomeCentro").trim();
+                                    int participantes = object.getInt("NParticipantes");
 
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                int reserva = object.getInt("IDReserva");
-                                String idsala = object.getString("IDSala");
-                                String sala = object.getString("NomeSala").trim();
-                                int idcentro = object.getInt("IDCentro");
-                                String centro = object.getString("NomeCentro").trim();
-                                String titulo = object.getString("Titulo").trim();
-                                int participantes = object.getInt("NParticipantes");
-                                String data = object.getString("HoraInicio").split("T")[0].trim();
-                                String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
-                                String horaFim = object.getString("HoraFim").split("T")[1].trim();
+                                    Date datainicio = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraInicio"));
+                                    Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
 
-                                Date datainicio = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraInicio"));
-                                Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
-                                Date currentTime = Calendar.getInstance().getTime();
+                                        reservas.add(new ReservasModel(
+                                                        reserva,
+                                                        titulo,
+                                                        data,
+                                                        idsala,
+                                                        sala,
+                                                        horaInicio,
+                                                        horaFim,
+                                                        centro,
+                                                        participantes,
+                                                        status
+                                                )
+                                        );
 
-                                if(datafim.getTime() >= currentTime.getTime() ){
-
-                                    if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
-                                        status = "A decorrer";
-
-                                    }
-                                    else
-                                    {
-                                        status = "Em breve";
-                                    }
-
-                                    reservas.add(new ReservasModel(
-                                                    reserva,
-                                                    titulo,
-                                                    data,
-                                                    idsala,
-                                                    sala,
-                                                    horaInicio,
-                                                    horaFim,
-                                                    centro,
-                                                    participantes,
-                                                    status
-                                            )
-                                    );
                                 }
                             }
                             adapterReservas= new listar_por_dia(getContext(),reservas,v_mensal.this::onRvClick);

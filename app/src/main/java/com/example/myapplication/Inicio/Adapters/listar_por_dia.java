@@ -50,12 +50,7 @@ public class listar_por_dia extends RecyclerView.Adapter<listar_por_dia.MyViewHo
         holder.horaFim.setText(model.get(position).getHoraFim());
         holder.centro.setText(model.get(position).getCentro());
         idreserva = model.get(position).getidreserva();
-        holder.info.setText(model.get(position).getStatus());
-        if(model.get(position).getStatus() == "A decorrer"){
-            holder.info.setTextColor(Color.parseColor("#FF4F33"));
-        }else {
-            holder.info.setTextColor(Color.parseColor("#36FF33"));
-        }
+
 
     }
 

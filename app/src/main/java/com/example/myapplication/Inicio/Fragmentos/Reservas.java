@@ -226,7 +226,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.PUT,
+                Request.Method.POST,
                 "/reservas/edit",
                 request,
                 new Response.Listener<JSONObject>() {
@@ -266,7 +266,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.PUT,
+                Request.Method.POST,
                 "/reservas/prolongar",
                 request,
                 new Response.Listener<JSONObject>() {
