@@ -208,12 +208,14 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         String dataformatada = editDate.getText().toString();
         String horainicio = dataformatada+"T"+editTime.getText()+":00.000Z";
         String horafim = dataformatada+"T"+editTime2.getText()+":00.000Z";
+
         /*
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         String hora_fimAsISO = df.format(hora_fim);
         */
+
         request.put("IDReserva", idreserva+"");
         request.put("IDSala", idsala+"");
         request.put("Titulo", editTitulo.getText().toString());
