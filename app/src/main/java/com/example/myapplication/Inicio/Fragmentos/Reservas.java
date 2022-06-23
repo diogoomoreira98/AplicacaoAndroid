@@ -10,9 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -139,7 +142,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
                                 Date currentTime = Calendar.getInstance().getTime();
 
-                                if(datafim.getTime() >= currentTime.getTime() ){
+                                if(datafim.getTime() >= currentTime.getTime()){
                                     String idsala = object.getString("IDSala").trim();
                                     if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
                                          status = "A decorrer";
@@ -281,6 +284,13 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                     public void onResponse(JSONObject response) {
                         try {
                             Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+
+                            // Reload current fragment
+                            Reservas fragInfo = new Reservas();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragmentContainerView, fragInfo);
+                            transaction.commit();
 
                            // Reservas InicioFragment = new Reservas();
                            // getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();

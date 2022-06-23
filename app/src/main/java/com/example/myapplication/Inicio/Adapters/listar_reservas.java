@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Inicio.models.ReservasModel;
@@ -64,6 +66,11 @@ public class listar_reservas extends RecyclerView.Adapter<listar_reservas.MyView
             holder.info.setTextColor(Color.parseColor("#36FF33"));
         }
 
+    }
+    public void updateData(List<ReservasModel>  viewModels) {
+        model.clear();
+        model.addAll(viewModels);
+        notifyDataSetChanged();
     }
 
     @Override
