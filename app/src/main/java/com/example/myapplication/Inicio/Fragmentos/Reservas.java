@@ -226,7 +226,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.POST,
+                Request.Method.PUT,
                 "/reservas/edit",
                 request,
                 new Response.Listener<JSONObject>() {
@@ -260,13 +260,20 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         final ReservasModel data = reservas.get(position);
         Context context = getActivity();
 
+
+        String dataformatada = data.getData();
+        String horainicio = dataformatada+"T"+data.getHoraInicio();
+        String horafim = dataformatada+"T"+data.getHoraFim();
+
         request.put("IDReserva", idreserva+"");
+        request.put("HoraInicio",horainicio);
+        request.put("HoraFim",horafim);
         request.put("Tempo", tempo+"");
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
-                Request.Method.POST,
+                Request.Method.PUT,
                 "/reservas/prolongar",
                 request,
                 new Response.Listener<JSONObject>() {
