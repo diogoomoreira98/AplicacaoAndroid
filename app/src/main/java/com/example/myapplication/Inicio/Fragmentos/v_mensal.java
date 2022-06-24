@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -51,6 +52,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener{
 
@@ -198,8 +200,17 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
                                     String idsala = object.getString("IDSala").trim();
                                     String titulo = object.getString("Titulo").trim();
                                     String data = object.getString("HoraInicio").split("T")[0].trim();
-                                    String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
-                                    String horaFim = object.getString("HoraFim").split("T")[1].trim();
+                                    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                    isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    DecimalFormat formatter = new DecimalFormat("00");
+
+                                    Date horaInicio = isoFormat.parse(object.getString("HoraInicio"));
+                                    String StringhoraInicio = formatter.format(horaInicio.getHours()) +":"+ formatter.format(horaInicio.getMinutes());
+
+                                    Date horaFim = isoFormat.parse(object.getString("HoraFim"));
+                                    String StringhoraFim = formatter.format(horaFim.getHours()) +":"+ formatter.format(horaFim.getMinutes());
+
+
                                     String centro = object.getString("NomeCentro").trim();
                                     int participantes = object.getInt("NParticipantes");
 
@@ -212,8 +223,8 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
                                                         data,
                                                         idsala,
                                                         sala,
-                                                        horaInicio,
-                                                        horaFim,
+                                                StringhoraInicio,
+                                                StringhoraFim,
                                                         centro,
                                                         participantes,
                                                         status

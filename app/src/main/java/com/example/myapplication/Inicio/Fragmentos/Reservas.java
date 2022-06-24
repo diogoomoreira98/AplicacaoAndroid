@@ -50,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -132,8 +133,17 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 String sala = object.getString("NomeSala").trim();
                                 String titulo = object.getString("Titulo").trim();
                                 String data = object.getString("HoraInicio").split("T")[0].trim();
-                                String horaInicio = object.getString("HoraInicio").split("T")[1].trim();
-                                String horaFim = object.getString("HoraFim").split("T")[1].trim();
+
+                                SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                DecimalFormat formatter = new DecimalFormat("00");
+
+                                Date horaInicio = isoFormat.parse(object.getString("HoraInicio"));
+                                String StringhoraInicio = formatter.format(horaInicio.getHours()) +":"+ formatter.format(horaInicio.getMinutes());
+
+                                Date horaFim = isoFormat.parse(object.getString("HoraFim"));
+                                String StringhoraFim = formatter.format(horaFim.getHours()) +":"+ formatter.format(horaFim.getMinutes());
+
                                 String centro = object.getString("NomeCentro").trim();
                                 int participantes = object.getInt("NParticipantes");
 
@@ -142,32 +152,45 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
                                 Date currentTime = Calendar.getInstance().getTime();
 
-                                if(datafim.getTime() >= currentTime.getTime()){
-                                    String idsala = object.getString("IDSala").trim();
-                                    if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
-                                         status = "A decorrer";
 
-                                    }
-                                    else
-                                    {
-                                        status = "Em breve";
-                                    }
-
+                                String idsala = object.getString("IDSala").trim();
+                                if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
+                                    status = "A decorrer";
                                     reservas.add(new ReservasModel(
                                                     reserva,
                                                     titulo,
                                                     data,
                                                     idsala,
                                                     sala,
-                                                    horaInicio,
-                                                    horaFim,
+                                                    StringhoraInicio,
+                                                    StringhoraFim,
                                                     centro,
                                                     participantes,
                                                     status
                                             )
                                     );
                                 }
-                            }
+                                else if(datainicio.getTime() >= currentTime.getTime())
+                                {
+                                    status = "Em breve";
+                                    reservas.add(new ReservasModel(
+                                                    reserva,
+                                                    titulo,
+                                                    data,
+                                                    idsala,
+                                                    sala,
+                                                    StringhoraInicio,
+                                                    StringhoraFim,
+                                                    centro,
+                                                    participantes,
+                                                    status
+                                            )
+                                    );
+                                }
+
+
+                                }
+
                             adapterReservas= new listar_reservas(getContext(),reservas,Reservas.this::onRvClick);
                             recyclerView.setAdapter(adapterReservas);
 
