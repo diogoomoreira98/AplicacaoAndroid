@@ -1,15 +1,11 @@
 package com.example.myapplication.Login;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -21,7 +17,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Inicio;
 import com.example.myapplication.R;
@@ -46,7 +41,7 @@ public class Registo extends AppCompatActivity {
         //Selecionar centro
         autoCompleteTextView = findViewById(R.id.editCentro);
         String[]option = {"Viseu", "Algarve", "Tondela","França"};
-        ArrayAdapter arrayAdapter = new ArrayAdapter(Registo.this,R.layout.centros_item , option);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(Registo.this,R.layout.salas_item, option);
         autoCompleteTextView.setAdapter(arrayAdapter);
 
 

@@ -17,6 +17,11 @@ public class SalaModel {
             this.alocacaomaxima = alocacaomaxima;
         }
 
+        @Override
+        public String toString(){
+            return nome;
+        }
+
         public int getIdsala() { return idsala; }
         public void setidsala(int idsala) { this.idsala = idsala; }
 

@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
@@ -63,15 +64,17 @@ import java.util.TimeZone;
 
 
 public class Reservas extends Fragment implements listar_reservas.onRvListener{
-
+    int posicao = 0;
      RecyclerView recyclerView;
      LinearLayoutManager layoutManager;
      listar_reservas adapterReservas;
      Cursor cursor;
      ArrayList<ReservasModel> reservas;
+    ArrayList<SalaModel> options;
      AlertDialog.Builder dialogBuilder;
      AlertDialog dialog;
      TextView editDate,editTime,editTime2,editTitulo,editParticipantes;
+    AutoCompleteTextView editSala;
      String status;
      long tempo;
 
@@ -232,8 +235,15 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         Context context = getActivity();
 
         String dataformatada = editDate.getText().toString();
-        String horainicio = dataformatada+"T"+editTime.getText()+":00.000Z";
-        String horafim = dataformatada+"T"+editTime2.getText()+":00.000Z";
+        DecimalFormat formatter = new DecimalFormat("00");
+
+        String iniciohora = formatter.format(Integer.parseInt(editTime.getText().toString().split(":")[0])-1);
+        String iniciominutos = editTime.getText().toString().split(":")[1];
+        String horainicio = dataformatada+"T"+iniciohora+":"+iniciominutos+":00.000Z";
+
+        String fimhora = formatter.format(Integer.parseInt(editTime2.getText().toString().split(":")[0])-1);
+        String fimminutos = editTime2.getText().toString().split(":")[1];
+        String horafim = dataformatada+"T"+fimhora+":"+fimminutos+":00.000Z";
 
         /*
         TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -394,6 +404,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
 
     public void createNewDialog(int position){
+
         dialogBuilder = new AlertDialog.Builder(getActivity());
         final View detalhePopup = getLayoutInflater().inflate(R.layout.detalhepopup,null);
         dialogBuilder.setView(detalhePopup);
@@ -405,6 +416,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         editTime2 = (TextView) detalhePopup.findViewById(R.id.editTime2);
         editTitulo = (TextView) detalhePopup.findViewById(R.id.editTitulo);
         editParticipantes= (TextView) detalhePopup.findViewById(R.id.editParticipantes);
+        editSala = (AutoCompleteTextView) detalhePopup.findViewById(R.id.drop_sala);
         Button btn_editar = (Button) detalhePopup.findViewById(R.id.btn_edit);
         Button btn_inativar = (Button) detalhePopup.findViewById(R.id.btn_ina);
 
@@ -415,7 +427,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         editTime2.setText(data.getHoraFim().toString().split(":")[0]+ ":" + data.getHoraFim().toString().split(":")[1]);
         editTitulo.setText(""+data.getTitulo());
         editParticipantes.setText(""+data.getParticipantes());
-
+        editSala.setText(""+data.getSala());
 
         Calendar calendar= Calendar.getInstance();
         Calendar time = Calendar.getInstance();
@@ -476,20 +488,86 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         });
 
 
-
-        btn_editar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Botão para editar a reserva
-                editar_reserva(position);
-            }
-        });
         btn_inativar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Botão para inativar
                 inativar_reserva();
 
+            }
+        });
+
+
+
+        Map<String, String> request = new HashMap<String, String>();
+        Context context = getActivity();
+        request.put("IDCentro", "1");
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                context,
+                Request.Method.POST,
+                "/salas/listbycentro",
+                request,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            options = new ArrayList<>();
+                            JSONArray jsonArray = response.getJSONArray("data");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                int idsala = object.getInt("IDSala");
+                                String nomesala = object.getString("Nome");
+                                String duracaolimpeza = object.getString("DuracaoLimpeza");
+                                String nmaxutentes = object.getString("NMaxUtentes");
+                                String alocacaomaxima = object.getString("AlocacaoMaxima");
+
+                                if(idsala==Integer.parseInt(data.getIdSala())){
+                                    posicao = i;
+                                }
+
+                                options.add(new SalaModel(
+                                        idsala,
+                                        nomesala,
+                                        duracaolimpeza,
+                                        nmaxutentes,
+                                        alocacaomaxima
+                                        )
+                                );
+                            }
+
+
+                            ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), R.layout.salas_item, options);
+                            editSala.setAdapter(arrayAdapter);
+
+                         //   editSala.setText("");
+                           // editSala.setSelection(posicao);
+                            //editSala.setText((CharSequence) arrayAdapter.getItem(position), false);
+
+                            //editSala.setSelection(posicao);
+                            //editSala.setListSelection(position);
+                            //editSala.setListSelection(1);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
+
+        btn_editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Botão para editar a reserva
+                editar_reserva(position);
             }
         });
 
