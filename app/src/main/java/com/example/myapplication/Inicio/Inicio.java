@@ -9,10 +9,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
@@ -33,6 +35,8 @@ public class Inicio extends AppCompatActivity {
     v_mensal calendarioFragment = new v_mensal();
     EscolherCentro escolherCentroFragment = new EscolherCentro();
 
+    private  androidx.appcompat.widget.Toolbar mTopToolbar;
+
    //SCAN
     Button btnScan;
     String[] permissions = {
@@ -45,7 +49,8 @@ public class Inicio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inicio);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
+        mTopToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mTopToolbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, reservasFragment).commit();
 
@@ -72,8 +77,8 @@ public class Inicio extends AppCompatActivity {
            }
        });
 
-       //Botão de scan
-        btnScan = (Button) findViewById(R.id.btn_scan);
+       /*Botão de scan
+        btnScan = (Button) findViewById(R.id.btnqrcode);
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,9 +91,44 @@ public class Inicio extends AppCompatActivity {
                     toast.show();
                 }
             }
-        });
+        });*/
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.btnqrcode) {
+            if(checkpermissions()) {
+                startActivity(new Intent(getApplicationContext(), ScannerActivity.class));
+            }
+            else{
+                Toast toast = Toast.makeText(getApplicationContext(), "faltam permissões", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            return true;
+        }
+        if (id == R.id.btnlogout) {
+            Toast.makeText(Inicio.this, "Action clicked", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private boolean checkpermissions(){
         List<String> listofpermisssions = new ArrayList<>();
         for (String perm: permissions){
@@ -102,6 +142,8 @@ public class Inicio extends AppCompatActivity {
         }
         return true;
     }
+
+
 
 }
 

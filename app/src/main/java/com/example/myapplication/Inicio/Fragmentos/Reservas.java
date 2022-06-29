@@ -21,11 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -68,6 +70,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
      RecyclerView recyclerView;
      LinearLayoutManager layoutManager;
      listar_reservas adapterReservas;
+     ArrayAdapter salasAdapter;
      Cursor cursor;
      ArrayList<ReservasModel> reservas;
     ArrayList<SalaModel> options;
@@ -138,7 +141,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 String data = object.getString("HoraInicio").split("T")[0].trim();
 
                                 SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                                isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                //isoFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));
                                 DecimalFormat formatter = new DecimalFormat("00");
 
                                 Date horaInicio = isoFormat.parse(object.getString("HoraInicio"));
@@ -154,6 +157,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date datainicio = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraInicio"));
                                 Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
                                 Date currentTime = Calendar.getInstance().getTime();
+
 
 
                                 String idsala = object.getString("IDSala").trim();
@@ -231,7 +235,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
         Map<String, String> request = new HashMap<String, String>();
         final int idreserva = reservas.get(position).getidreserva();
-        final String idsala = reservas.get(position).getIdSala();
+        final int idsala = options.get(posicao).getIdsala();
         Context context = getActivity();
 
         String dataformatada = editDate.getText().toString();
@@ -290,55 +294,99 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
     }
     public void aumentar_tempo(int position, long tempo) {
 
+            Map<String, String> request = new HashMap<String, String>();
+            final int idreserva = reservas.get(position).getidreserva();
+            final ReservasModel data = reservas.get(position);
+            Context context = getActivity();
 
-        Map<String, String> request = new HashMap<String, String>();
-        final int idreserva = reservas.get(position).getidreserva();
-        final ReservasModel data = reservas.get(position);
-        Context context = getActivity();
+            request.put("IDReserva", idreserva+"");
+
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                    context,
+                    Request.Method.POST,
+                    "/reservas/listbyreserva",
+                    request,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Map<String, String> request = new HashMap<String, String>();
+                                JSONArray jsonArray = response.getJSONArray("data");
+                                String sala="", horainicio = "", horafim = "";
+
+                                for (int i = 0; i < jsonArray.length();i++) {
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    sala = object.getString("IDSala").trim();
+                                    horainicio = object.getString("HoraInicio");
+                                    horafim = object.getString("HoraFim");
+                                }
+
+                                SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                //isoFormat.setTimeZone(TimeZone.getTimeZone("UTC+0"));
+                                DecimalFormat formatter = new DecimalFormat("00");
+
+                                Date horaInicio = isoFormat.parse(horainicio);
+                                Date horaFim = isoFormat.parse(horafim);
+                                Date horaFimMaisTempo = new Date(horaFim.getTime() + tempo * 60000);
+
+                                String horainiciaenviar = isoFormat.format(horaInicio);
+                                String horafimenviar = isoFormat.format(horaFimMaisTempo);
 
 
-        String dataformatada = data.getData();
-        String horainicio = dataformatada+"T"+data.getHoraInicio();
-        String horafim = dataformatada+"T"+data.getHoraFim();
+                                request.put("IDReserva", idreserva+"");
+                                request.put("HoraInicio",horainiciaenviar);
+                                request.put("HoraFim",horafimenviar);
+                                request.put("IDSala",sala);
 
-        request.put("IDReserva", idreserva+"");
-        request.put("HoraInicio",horainicio);
-        request.put("HoraFim",horafim);
-        request.put("Tempo", tempo+"");
+                                RequestQueue requestQueue = Volley.newRequestQueue(context);
+                                CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                                        context,
+                                        Request.Method.PUT,
+                                        "/reservas/prolongar",
+                                        request,
+                                        new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                try {
+                                                    Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+                                                    dialog.cancel();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
-                context,
-                Request.Method.PUT,
-                "/reservas/prolongar",
-                request,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
-                            dialog.cancel();
+                                                    // Reload current fragment
+                                                    Reservas fragInfo = new Reservas();
+                                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                                    transaction.replace(R.id.fragmentContainerView, fragInfo);
+                                                    transaction.commit();
 
-                            // Reload current fragment
-                            Reservas fragInfo = new Reservas();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.fragmentContainerView, fragInfo);
-                            transaction.commit();
+                                                    // Reservas InicioFragment = new Reservas();
+                                                    // getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                                                    //dialog.cancel();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                requestQueue.add(jsonObjectRequest);
 
-                           // Reservas InicioFragment = new Reservas();
-                           // getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
-                            //dialog.cancel();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+
+
+                            } catch (JSONException | ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
 
 
     }
@@ -381,6 +429,10 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                 } else if(checkedId == R.id.radioButton5){
                     tempo = 30;
                     Toast.makeText(getActivity().getApplicationContext(), "choice: 30",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    tempo = 0;
+                    Toast.makeText(getActivity().getApplicationContext(), "Por favor escolha uma duração",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -427,7 +479,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         editTime2.setText(data.getHoraFim().toString().split(":")[0]+ ":" + data.getHoraFim().toString().split(":")[1]);
         editTitulo.setText(""+data.getTitulo());
         editParticipantes.setText(""+data.getParticipantes());
-        editSala.setText(""+data.getSala());
+
 
         Calendar calendar= Calendar.getInstance();
         Calendar time = Calendar.getInstance();
@@ -501,59 +553,89 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
         Map<String, String> request = new HashMap<String, String>();
         Context context = getActivity();
-        request.put("IDCentro", "1");
+        request.put("IDSala", data.getIdSala());
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
                 Request.Method.POST,
-                "/salas/listbycentro",
+                "/salas/listbysala",
                 request,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+
+                        Map<String, String> request = new HashMap<String, String>();
+
                         try {
-                            options = new ArrayList<>();
                             JSONArray jsonArray = response.getJSONArray("data");
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            String sala="", horainicio = "", horafim = "";
 
+                            for (int i = 0; i < jsonArray.length();i++) {
                                 JSONObject object = jsonArray.getJSONObject(i);
-
-                                int idsala = object.getInt("IDSala");
-                                String nomesala = object.getString("Nome");
-                                String duracaolimpeza = object.getString("DuracaoLimpeza");
-                                String nmaxutentes = object.getString("NMaxUtentes");
-                                String alocacaomaxima = object.getString("AlocacaoMaxima");
-
-                                if(idsala==Integer.parseInt(data.getIdSala())){
-                                    posicao = i;
-                                }
-
-                                options.add(new SalaModel(
-                                        idsala,
-                                        nomesala,
-                                        duracaolimpeza,
-                                        nmaxutentes,
-                                        alocacaomaxima
-                                        )
-                                );
+                                request.put("IDCentro", object.getString("IDCentro").trim());
                             }
-
-
-                            ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), R.layout.salas_item, options);
-                            editSala.setAdapter(arrayAdapter);
-
-                         //   editSala.setText("");
-                           // editSala.setSelection(posicao);
-                            //editSala.setText((CharSequence) arrayAdapter.getItem(position), false);
-
-                            //editSala.setSelection(posicao);
-                            //editSala.setListSelection(position);
-                            //editSala.setListSelection(1);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+
+
+
+
+                        RequestQueue requestQueue = Volley.newRequestQueue(context);
+                        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                                context,
+                                Request.Method.POST,
+                                "/salas/listbycentro",
+                                request,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            options = new ArrayList<>();
+                                            JSONArray jsonArray = response.getJSONArray("data");
+
+                                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                                int idsala = object.getInt("IDSala");
+                                                String nomesala = object.getString("Nome");
+                                                String duracaolimpeza = object.getString("DuracaoLimpeza");
+                                                String nmaxutentes = object.getString("NMaxUtentes");
+                                                String alocacaomaxima = object.getString("AlocacaoMaxima");
+
+                                                if(idsala==Integer.parseInt(data.getIdSala())){
+                                                    posicao = i;
+                                                }
+                                                //uma possivel solução, percorrer o array até encontrar o nome da sala selecionada, ir á posição anterior buscar o valor do id
+                                                options.add(new SalaModel(
+                                                                idsala,
+                                                                nomesala,
+                                                                duracaolimpeza,
+                                                                nmaxutentes,
+                                                                alocacaomaxima
+                                                        )
+                                                );
+                                            }
+
+
+                                            salasAdapter = new ArrayAdapter(getContext(), R.layout.salas_item, options);
+                                            editSala.setText(options.get(posicao).toString());
+                                            editSala.setAdapter(salasAdapter);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        requestQueue.add(jsonObjectRequest);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -562,6 +644,14 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             }
         });
         requestQueue.add(jsonObjectRequest);
+
+        editSala.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
+                posicao = position;
+            }
+        });
 
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
