@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,8 @@ import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.Inicio.Fragmentos.v_mensal;
+import com.example.myapplication.Login.SaveDataContract;
+import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -121,7 +125,37 @@ public class Inicio extends AppCompatActivity {
             return true;
         }
         if (id == R.id.btnlogout) {
-            Toast.makeText(Inicio.this, "Action clicked", Toast.LENGTH_LONG).show();
+            SaveDataDbHelper dbHelper = new SaveDataDbHelper(Inicio.this);
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            String[] projection = {
+                    SaveDataContract.SaveData.ID_USER,
+                    SaveDataContract.SaveData.TOKEN,
+            };
+
+            Cursor cursor = db.query(
+                    SaveDataContract.SaveData.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            List dados = new ArrayList<>();
+            while(cursor.moveToNext()) {
+                long itemId = cursor.getInt(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.ID_USER));
+                String token = cursor.getString(cursor.getColumnIndexOrThrow(SaveDataContract.SaveData.TOKEN));
+                dados.add(itemId);
+                dados.add(token);
+            }
+            cursor.close();
+            if(!dados.isEmpty()){
+                int deletedRows = db.delete(SaveDataContract.SaveData.TABLE_NAME, null, null);
+                //startActivity(new Intent(getContext(), Login.class));
+                this.finish();
+                Toast.makeText(Inicio.this, "Logout efetuado com sucesso", Toast.LENGTH_LONG).show();
+            }
             return true;
         }
 
