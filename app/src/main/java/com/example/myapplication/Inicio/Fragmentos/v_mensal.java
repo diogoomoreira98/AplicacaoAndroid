@@ -94,6 +94,7 @@ public class v_mensal extends Fragment implements CalendarAdapter.OnItemListener
             @Override
             public void onClick(View view) {
                 //Ao clicar no botão nova reserva mudar para outro fragmento:
+                getFragmentManager().popBackStack();
                 Fragment someFragment = new EscolherCentro();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragmentContainerView, someFragment ); // give your fragment container id in first parameter

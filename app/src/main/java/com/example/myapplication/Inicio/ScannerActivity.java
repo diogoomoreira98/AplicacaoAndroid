@@ -11,8 +11,6 @@ import android.widget.Toast;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
-import com.example.myapplication.Inicio.Fragmentos.Reserva_direta;
-import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.ReservaDireta;
 import com.example.myapplication.R;
 import com.google.zxing.Result;

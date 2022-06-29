@@ -17,11 +17,6 @@
         tools:layout="@layout/fragment_reserva" />
 
     <fragment
-        android:id="@+id/notificacoes"
-        android:name="com.example.myapplication.Inicio.Fragmentos.Reserva_direta"
-        android:label="fragment_notificacoes"
-        tools:layout="@layout/fragment_r_qrcode" />
-    <fragment
         android:id="@+id/v_mensal"
         android:name="com.example.myapplication.Inicio.Fragmentos.v_mensal"
         android:label="fragment_v_mensal"
