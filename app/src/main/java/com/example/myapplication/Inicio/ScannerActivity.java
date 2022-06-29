@@ -26,7 +26,7 @@ public class ScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanner);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         Intent intent = new Intent(ScannerActivity.this, ReservaDireta.class);
-        startActivity(intent);
+        //startActivity(intent);
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -34,10 +34,14 @@ public class ScannerActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        try {
                         Toast.makeText(ScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                         intent.putExtra("IDSala", result.getText());
-                        finish();
                         startActivity(intent);
+                        this.finalize();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
 
                     }
                 });

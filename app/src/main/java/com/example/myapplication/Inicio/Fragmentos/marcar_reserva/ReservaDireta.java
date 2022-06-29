@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,7 +21,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.Inicio.Fragmentos.Reserva_direta;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
+import com.example.myapplication.Inicio.Inicio;
+import com.example.myapplication.Inicio.ScannerActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.VolleyAPI.CustomJsonRequest;
 import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
@@ -40,11 +45,18 @@ public class ReservaDireta extends AppCompatActivity {
     EditText time_in2;
     Button btn_procurar, btn_confirmarr;
     String IDSala;
+    private  androidx.appcompat.widget.Toolbar mTopToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserva_direta);
+
+        mTopToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mTopToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -157,8 +169,8 @@ public class ReservaDireta extends AppCompatActivity {
                         try {
                             Toast.makeText(ReservaDireta.this, response.getString("msg"), Toast.LENGTH_SHORT).show();
 
-                            Reservas InicioFragment = new Reservas();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            Intent intent = new Intent(context, Inicio.class);
+                            startActivity(intent);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -193,5 +205,16 @@ public class ReservaDireta extends AppCompatActivity {
 
         date_in.setText(sdf.format(calendar1.getTime()));
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            this.finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

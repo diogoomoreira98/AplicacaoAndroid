@@ -26,6 +26,7 @@
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/drawable/ic_logosoftinsa.xml" value="0.3295" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/drawable/ic_qr_code_svgrepo_com.xml" value="0.1" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/activity_nova_pass.xml" value="0.25" />
+        <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/activity_reserva_direta.xml" value="0.33" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/activity_scanner.xml" value="0.24682971014492755" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/aumentar_popup.xml" value="0.36666666666666664" />
         <entry key="..\:/AplicacaoAndroid/app/src/main/res/layout/calendar_cell.xml" value="0.36666666666666664" />
@@ -55,8 +56,6 @@
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/layout/fragment_reservas.xml" value="0.2" />
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/layout/inicio.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/Admin/Desktop/AplicacaoAndroid/app/src/main/res/layout/login.xml" value="0.1762917933130699" />
-        <entry key="..\:/Users/Frias/AndroidStudioProjects/AplicacaoAndroid/app/src/main/res/layout/activity_reserva_direta.xml" value="0.18541666666666667" />
-        <entry key="..\:/Users/Frias/AndroidStudioProjects/AplicacaoAndroid/app/src/main/res/layout/fragment_r_qrcode.xml" value="0.1" />
         <entry key="..\:/Users/Frias/StudioProjects/AplicacaoAndroid/app/src/main/res/layout/fragment_reserva.xml" value="0.33" />
         <entry key="..\:/Users/Frias/StudioProjects/AplicacaoAndroid/app/src/main/res/layout/inicio.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/Pedro Frias/AndroidStudioProjects/AplicacaoAndroid/app/src/main/res/layout/activity_registo.xml" value="0.1762917933130699" />

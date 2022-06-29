@@ -16,8 +16,4 @@
         android:title="Calendário"
         android:icon="@drawable/ic_calendario"/>
 
-    <item
-        android:id="@+id/notificacoes"
-        android:title="Notificações"
-        android:icon="@drawable/ic_notificacao"/>
 </menu>
