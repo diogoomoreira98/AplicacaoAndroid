@@ -9,7 +9,7 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Inicio.Fragmentos.marcar_reserva.ReservaDireta"
+            android:exported="false" />
         <activity
             android:name=".Inicio.ScannerActivity"
             android:exported="false" />

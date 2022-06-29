@@ -1,18 +1,13 @@
-package com.example.myapplication.Inicio.Fragmentos;
+package com.example.myapplication.Inicio.Fragmentos.marcar_reserva;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,8 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.example.myapplication.Login.SaveDataContract;
-import com.example.myapplication.Login.SaveDataDbHelper;
+import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.VolleyAPI.CustomJsonRequest;
 import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
@@ -34,15 +28,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
-public class Reserva_direta extends Fragment {
+public class ReservaDireta extends AppCompatActivity {
 
     EditText date_in;
     EditText time_in, editParticipantes, titulo;
@@ -51,25 +42,24 @@ public class Reserva_direta extends Fragment {
     String IDSala;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_r_qrcode, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reserva_direta);
 
-        if (getArguments() != null) {
-            //IDSala = getArguments().getString("IDSala");
-            IDSala = "1";
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            IDSala = extras.getString("IDSala");
         }
 
-        date_in = view.findViewById(R.id.editDate);
-        time_in = view.findViewById(R.id.editTime);
-        editParticipantes = view.findViewById(R.id.editParticipantes);
-        btn_confirmarr = view.findViewById(R.id.btn_confirmarr);
+        date_in = findViewById(R.id.editDate);
+        time_in = findViewById(R.id.editTime);
+        editParticipantes = findViewById(R.id.editParticipantes);
+        btn_confirmarr = findViewById(R.id.btn_confirmarr);
 
 
-        titulo = view.findViewById(R.id.editTitulo);
-        time_in2 = view.findViewById(R.id.editTime2);
-        btn_procurar = view.findViewById(R.id.verifica_disp);
+        titulo = findViewById(R.id.editTitulo);
+        time_in2 = findViewById(R.id.editTime2);
+        btn_procurar = findViewById(R.id.verifica_disp);
         date_in.setInputType(InputType.TYPE_NULL);
         time_in.setInputType(InputType.TYPE_NULL);
         time_in2.setInputType(InputType.TYPE_NULL);
@@ -115,21 +105,21 @@ public class Reserva_direta extends Fragment {
         date_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getContext(),date,calendar.get(calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(ReservaDireta.this,date,calendar.get(calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         time_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getContext(),timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+                new TimePickerDialog(ReservaDireta.this,timeSetListener,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
             }
         });
 
         time_in2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(getContext(),timeSetListener2,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
+                new TimePickerDialog(ReservaDireta.this,timeSetListener2,calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false).show();
             }
         });
 
@@ -139,10 +129,7 @@ public class Reserva_direta extends Fragment {
                 confirmar_reserva();
             }
         });
-
-        return view;
     }
-
 
     public void confirmar_reserva(){
         Map<String, String> request = new HashMap<String, String>();
@@ -157,7 +144,7 @@ public class Reserva_direta extends Fragment {
         request.put("HoraInicio", horainicio);
         request.put("HoraFim", horafim);
 
-        Context context = getActivity();
+        Context context = ReservaDireta.this;
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
                 context,
@@ -168,10 +155,10 @@ public class Reserva_direta extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ReservaDireta.this, response.getString("msg"), Toast.LENGTH_SHORT).show();
 
                             Reservas InicioFragment = new Reservas();
-                            getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -180,7 +167,7 @@ public class Reserva_direta extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, ReservaDireta.this), Toast.LENGTH_LONG).show();
             }
         });
         requestQueue.add(jsonObjectRequest);
@@ -206,4 +193,5 @@ public class Reserva_direta extends Fragment {
 
         date_in.setText(sdf.format(calendar1.getTime()));
     }
+
 }
