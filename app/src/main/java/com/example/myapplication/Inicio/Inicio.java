@@ -13,12 +13,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.example.myapplication.Inicio.Fragmentos.Notificacoes;
+import com.example.myapplication.Inicio.Fragmentos.Reserva_direta;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.Inicio.Fragmentos.v_mensal;
@@ -35,7 +33,7 @@ public class Inicio extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     Reservas reservasFragment = new Reservas();
-    Notificacoes notificacoesFragment = new Notificacoes();
+    Reserva_direta reservadiretaFragment = new Reserva_direta();
     v_mensal calendarioFragment = new v_mensal();
     EscolherCentro escolherCentroFragment = new EscolherCentro();
 
@@ -70,7 +68,7 @@ public class Inicio extends AppCompatActivity {
                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,escolherCentroFragment).commit();
                        return true;
                    case R.id.notificacoes:
-                       getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,notificacoesFragment).commit();
+                       getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, reservadiretaFragment).commit();
                        return true;
                    case R.id.calendario:
                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,calendarioFragment).commit();

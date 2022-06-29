@@ -42,18 +42,23 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class Notificacoes extends Fragment {
+public class Reserva_direta extends Fragment {
 
     EditText date_in;
     EditText time_in, editParticipantes, titulo;
     EditText time_in2;
     Button btn_procurar, btn_confirmarr;
+    String IDSala;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_r_qrcode, container, false);
+
+        if (getArguments() != null) {
+            IDSala = getArguments().getString("IDSala");
+        }
 
         date_in = view.findViewById(R.id.editDate);
         time_in = view.findViewById(R.id.editTime);
@@ -145,7 +150,7 @@ public class Notificacoes extends Fragment {
         String horainicio = dataformatada+"T"+time_in.getText()+":00.000Z";
         String horafim = dataformatada+"T"+time_in2.getText()+":00.000Z";
 
-        request.put("IDSala", "1");
+        request.put("IDSala", IDSala);
         request.put("Titulo", titulo.getText()+"");
         request.put("NParticipantes", editParticipantes.getText()+"");
         request.put("HoraInicio", horainicio);

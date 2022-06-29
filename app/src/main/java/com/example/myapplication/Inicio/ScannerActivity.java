@@ -10,6 +10,8 @@ import android.widget.Toast;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.example.myapplication.Inicio.Fragmentos.Reserva_direta;
+import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.R;
 import com.google.zxing.Result;
 
@@ -29,6 +31,11 @@ public class ScannerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(ScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        Reserva_direta InicioFragment = new Reserva_direta();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("IDSala", result.getText());
+                        InicioFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView,InicioFragment).commit();
                     }
                 });
             }

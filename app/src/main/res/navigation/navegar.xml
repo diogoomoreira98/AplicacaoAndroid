@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/notificacoes"
-        android:name="com.example.myapplication.Inicio.Fragmentos.Notificacoes"
+        android:name="com.example.myapplication.Inicio.Fragmentos.Reserva_direta"
         android:label="fragment_notificacoes"
         tools:layout="@layout/fragment_r_qrcode" />
     <fragment
