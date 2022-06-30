@@ -41,12 +41,11 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         Button button = (Button) findViewById(R.id.entrar);
-        Button registo = (Button) findViewById(R.id.registar);
+
 
         EditText email = (EditText)findViewById(R.id.loginEmail);
         EditText password = (EditText)findViewById(R.id.loginPassword);
-        email.setText("admin@admin.com");
-        password.setText("Admin1234");
+
         Cursor cursor;
 
         TextView esquece = (TextView) findViewById(R.id.textView);
@@ -97,6 +96,8 @@ public class Login extends AppCompatActivity {
                 EditText email = (EditText)findViewById(R.id.loginEmail);
                 EditText password = (EditText)findViewById(R.id.loginPassword);
 
+                //email.setText("admin@admin.com");
+                //password.setText("Admin1234");
 
                 if(isEmail(email) && isPassword(password)){
                     //rest api login
@@ -123,18 +124,19 @@ public class Login extends AppCompatActivity {
                                 String token = response.optString("token");
                                 String idUser = response.optJSONObject("data").optString("IDUtilizador");
                                 boolean isDefault = response.optBoolean("isDefault");
+                                if(isDefault){
+                                    Intent i = new Intent(getApplicationContext(), NovaPass.class);
+                                    i.putExtra("token",token);
+                                    i.putExtra("IDUser",idUser);
+                                    startActivity(i);
+                                }else{
+                                    SaveDataDbHelper dbHelper = new SaveDataDbHelper(Login.this);
+                                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                    ContentValues values = new ContentValues();
+                                    values.put(SaveDataContract.SaveData.ID_USER, idUser);
+                                    values.put(SaveDataContract.SaveData.TOKEN, token);
+                                    long newRowId = db.insert(SaveDataContract.SaveData.TABLE_NAME, null, values);
 
-                                SaveDataDbHelper dbHelper = new SaveDataDbHelper(Login.this);
-                                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(SaveDataContract.SaveData.ID_USER, idUser);
-                                values.put(SaveDataContract.SaveData.TOKEN, token);
-                                long newRowId = db.insert(SaveDataContract.SaveData.TABLE_NAME, null, values);
-
-                                if(isDefault)
-                                {
-                                    startActivity(new Intent(getApplicationContext(), NovaPass.class));
-                                }else {
                                     startActivity(new Intent(getApplicationContext(), Inicio.class));
                                     Toast.makeText(getApplicationContext(), response.optString("msg"), Toast.LENGTH_LONG).show();
                                 }
@@ -158,14 +160,6 @@ public class Login extends AppCompatActivity {
                     });
                     requestQueue.add(jsonObjectRequest);
                 }
-            }
-        });
-
-        registo.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // mudar para atividade registo
-                Intent mRegisto= new Intent(getApplicationContext(), Registo.class);
-                startActivity(mRegisto);
             }
         });
     }
