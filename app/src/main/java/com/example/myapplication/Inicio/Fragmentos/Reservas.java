@@ -396,8 +396,40 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
 
     }
 
-    public void inativar_reserva() {
-//IDReserva, IDSala, IDCentro, IDUtilizador, Titulo, NParticipantes, HoraInicio, HoraFim, Active
+    public void inativar_reserva(int position) {
+        //IDReserva, IDSala, IDCentro, IDUtilizador, Titulo, NParticipantes, HoraInicio, HoraFim, Active
+
+        Map<String, String> request = new HashMap<String, String>();
+        final int idreserva = reservas.get(position).getidreserva();
+        final ReservasModel data = reservas.get(position);
+        Context context = getActivity();
+
+        request.put("IDReserva", idreserva+"");
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        CustomJsonRequest jsonObjectRequest = new CustomJsonRequest(
+                context,
+                Request.Method.PUT,
+                "/reservas/cancel",
+                request,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Toast.makeText(getContext(), response.getString("msg"), Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, VolleyErrorHelper.getMessage(error, getActivity()), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(jsonObjectRequest);
     }
 
     public void createNewDialogAumentar(int position) {
@@ -549,7 +581,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
             @Override
             public void onClick(View view) {
                 //Botão para inativar
-                inativar_reserva();
+                inativar_reserva(position);
 
             }
         });
