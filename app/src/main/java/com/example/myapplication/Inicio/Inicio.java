@@ -4,13 +4,26 @@ package com.example.myapplication.Inicio;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -22,6 +35,7 @@ import com.example.myapplication.Inicio.Fragmentos.v_mensal;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.notifications.ReminderBroadcast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
@@ -34,6 +48,7 @@ public class Inicio extends AppCompatActivity {
     Reservas reservasFragment = new Reservas();
     v_mensal calendarioFragment = new v_mensal();
     EscolherCentro escolherCentroFragment = new EscolherCentro();
+    int count=0;
 
     private  androidx.appcompat.widget.Toolbar mTopToolbar;
 
@@ -51,6 +66,7 @@ public class Inicio extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         mTopToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mTopToolbar);
+        int NutificationTimeRefreshInSecs = 10;
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, reservasFragment).commit();
 
@@ -76,24 +92,9 @@ public class Inicio extends AppCompatActivity {
                return false;
            }
        });
-
-       /*Botão de scan
-        btnScan = (Button) findViewById(R.id.btnqrcode);
-        btnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(checkpermissions()) {
-                    startActivity(new Intent(getApplicationContext(), ScannerActivity.class));
-                }
-                else{
-                    Toast toast = Toast.makeText(getApplicationContext(), "faltam permissões", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });*/
-
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

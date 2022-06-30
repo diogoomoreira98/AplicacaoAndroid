@@ -47,6 +47,7 @@ import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.VolleyAPI.CustomJsonRequest;
 import com.example.myapplication.Utils.VolleyAPI.VolleyErrorHelper;
+import com.example.myapplication.Utils.notifications.ReminderBroadcast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,7 +159,11 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
                                 Date currentTime = Calendar.getInstance().getTime();
 
+                                String notifyTitulo = "Notificação de rezerva";
+                                String notifyDescricao = "A sua reserva "+ titulo +"\n Começa dentro de 10 minutos. Com hora prevista final as "+ datafim.getHours()+":"+datafim.getMinutes();
 
+                                ReminderBroadcast.cancelNotification(context, notifyTitulo, notifyDescricao);
+                                ReminderBroadcast.scheduleNotification(context, datainicio.getTime()-600000, notifyTitulo, notifyDescricao); //10min antes da reserva
 
                                 String idsala = object.getString("IDSala").trim();
                                 if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
