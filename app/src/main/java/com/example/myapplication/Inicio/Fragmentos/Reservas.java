@@ -159,11 +159,16 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                                 Date datafim = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(object.getString("HoraFim"));
                                 Date currentTime = Calendar.getInstance().getTime();
 
-                                String notifyTitulo = "Notificação de rezerva";
-                                String notifyDescricao = "A sua reserva "+ titulo +"\n Começa dentro de 10 minutos. Com hora prevista final as "+ datafim.getHours()+":"+datafim.getMinutes();
 
-                                ReminderBroadcast.cancelNotification(context, notifyTitulo, notifyDescricao);
-                                ReminderBroadcast.scheduleNotification(context, datainicio.getTime()-600000, notifyTitulo, notifyDescricao); //10min antes da reserva
+                                if(datainicio.getTime() >= currentTime.getTime()){
+                                    String notifyTitulo = "Notificação de reserva";
+                                    String notifyDescricao = "A sua reserva "+ titulo
+                                            +"\n Começa dentro de 10 minutos."
+                                            +"\n Com hora prevista final para as "+ datafim.getHours()+":"+datafim.getMinutes();
+
+                                    ReminderBroadcast.cancelNotification(context, reserva);
+                                    ReminderBroadcast.scheduleNotification(context, reserva,datainicio.getTime()-600000, notifyTitulo, notifyDescricao); //10min antes da reserva
+                                }
 
                                 String idsala = object.getString("IDSala").trim();
                                 if(datainicio.getTime() <= currentTime.getTime() && datafim.getTime() >= currentTime.getTime()){
