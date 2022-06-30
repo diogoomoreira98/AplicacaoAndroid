@@ -86,7 +86,7 @@ public class Reserva extends Fragment {
         time_in2.setInputType(InputType.TYPE_NULL);
 
 
-        Toast.makeText(getContext(),""+IDCentro , Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(),""+IDCentro , Toast.LENGTH_LONG).show();
 
         
         Calendar calendar= Calendar.getInstance();

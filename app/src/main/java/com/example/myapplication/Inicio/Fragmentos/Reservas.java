@@ -238,7 +238,7 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
         }
 
         final ReservasModel idreserva = reservas.get(position);
-        Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext(),""+idreserva.getidreserva() , Toast.LENGTH_LONG).show();
     }
 
     public void editar_reserva(int position){
@@ -454,24 +454,19 @@ public class Reservas extends Fragment implements listar_reservas.onRvListener{
                 // find which radio button is selected
                 if(checkedId == R.id.radioButton) {
                     tempo = 10;
-                    Toast.makeText(getActivity().getApplicationContext(), "choice: 10",
-                            Toast.LENGTH_SHORT).show();
+
                 } else if(checkedId == R.id.radioButton2) {
                     tempo = 15;
-                    Toast.makeText(getActivity().getApplicationContext(), "choice: 15",
-                            Toast.LENGTH_SHORT).show();
+
                 } else if(checkedId == R.id.radioButton3){
                     tempo = 20;
-                    Toast.makeText(getActivity().getApplicationContext(), "choice: 20",
-                            Toast.LENGTH_SHORT).show();
+
                 } else if(checkedId == R.id.radioButton4){
                     tempo = 25;
-                    Toast.makeText(getActivity().getApplicationContext(), "choice: 25",
-                            Toast.LENGTH_SHORT).show();
+
                 } else if(checkedId == R.id.radioButton5){
                     tempo = 30;
-                    Toast.makeText(getActivity().getApplicationContext(), "choice: 30",
-                            Toast.LENGTH_SHORT).show();
+
                 }else{
                     tempo = 0;
                     Toast.makeText(getActivity().getApplicationContext(), "Por favor escolha uma duração",

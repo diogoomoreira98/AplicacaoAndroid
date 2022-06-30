@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.example.myapplication.Inicio.Fragmentos.marcar_reserva.EscolherCentro;
 import com.example.myapplication.Inicio.Fragmentos.Reservas;
 import com.example.myapplication.Inicio.Fragmentos.v_mensal;
+import com.example.myapplication.Login.Login;
 import com.example.myapplication.Login.SaveDataContract;
 import com.example.myapplication.Login.SaveDataDbHelper;
 import com.example.myapplication.R;
@@ -151,7 +152,7 @@ public class Inicio extends AppCompatActivity {
             cursor.close();
             if(!dados.isEmpty()){
                 int deletedRows = db.delete(SaveDataContract.SaveData.TABLE_NAME, null, null);
-                //startActivity(new Intent(getContext(), Login.class));
+                startActivity(new Intent(Inicio.this, Login.class));
                 this.finish();
                 Toast.makeText(Inicio.this, "Logout efetuado com sucesso", Toast.LENGTH_LONG).show();
             }
