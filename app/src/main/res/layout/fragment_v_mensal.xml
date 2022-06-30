@@ -127,15 +127,16 @@
         android:layout_weight="1"/>
 
     <Button
+        android:id="@+id/reservar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@null"
         android:text="Nova Reserva"
         android:textColor="@color/white"
-        android:background="@null"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:id="@+id/reservar"
-        android:layout_gravity="center"
-        android:textSize="20sp"/>
+        android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_listarpordia"
