@@ -46,22 +46,19 @@ public class ReminderBroadcast extends BroadcastReceiver {
         manager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public static void scheduleNotification(Context context, long time, String title, String text) {
+    public static void scheduleNotification(Context context, int id, long time, String title, String text) {
+        // Schdedule notification
         Intent intent = new Intent(context, ReminderBroadcast.class);
         intent.putExtra("title", title);
         intent.putExtra("text", text);
-        PendingIntent pending = PendingIntent.getBroadcast(context, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Schdedule notification
+        PendingIntent pending = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pending);
     }
 
-    public static void cancelNotification(Context context, String title, String text) {
-        Intent intent = new Intent(context, ReminderBroadcast.class);
-        intent.putExtra("title", title);
-        intent.putExtra("text", text);
-        PendingIntent pending = PendingIntent.getBroadcast(context, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    public static void cancelNotification(Context context, int id) {
         // Cancel notification
+        PendingIntent pending = PendingIntent.getBroadcast(context, id, new Intent(context, ReminderBroadcast.class), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pending);
     }

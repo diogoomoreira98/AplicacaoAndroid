@@ -1,6 +1,9 @@
 package com.example.myapplication.Inicio;
 
 
+import static com.example.myapplication.Utils.notifications.ReminderBroadcast.cancelNotification;
+import static com.example.myapplication.Utils.notifications.ReminderBroadcast.scheduleNotification;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -66,9 +69,10 @@ public class Inicio extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         mTopToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mTopToolbar);
-        int NutificationTimeRefreshInSecs = 10;
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, reservasFragment).commit();
+
+
 
        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
            @Override
