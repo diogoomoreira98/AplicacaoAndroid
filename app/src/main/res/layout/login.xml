@@ -89,6 +89,7 @@
         android:layout_marginBottom="310dp"
         android:text="Esqueceu-se da palavra passe?"
         android:textColor="#100F0F"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

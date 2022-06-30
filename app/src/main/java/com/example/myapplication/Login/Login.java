@@ -13,6 +13,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -22,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.Inicio.Inicio;
+import com.example.myapplication.Inicio.web.Esquece_pass;
 import com.example.myapplication.R;
 
 import org.json.JSONException;
@@ -47,6 +49,14 @@ public class Login extends AppCompatActivity {
         password.setText("Admin1234");
         Cursor cursor;
 
+        TextView esquece = (TextView) findViewById(R.id.textView);
+
+        esquece.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Esquece_pass.class));
+            }
+        });
 
         try {
             SaveDataDbHelper dbHelper = new SaveDataDbHelper(Login.this);
