@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".Utils.notifications.ReminderBroadcast" android:enabled="true" />
+       <receiver android:name=".Utils.notifications.ReminderBroadcast" android:enabled="true" />
     </application>
 
 </manifest>

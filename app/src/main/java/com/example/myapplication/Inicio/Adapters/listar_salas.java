@@ -37,7 +37,8 @@ public class listar_salas extends RecyclerView.Adapter<listar_salas.MyViewHolder
     public void onBindViewHolder(@NonNull listar_salas.MyViewHolder holder, int position) {
 
         //Setar texto nos campos
-        holder.nomeSala.setText(model.get(position).getNome());
+        holder.nomeSala.setText("Nome: "+model.get(position).getNome());
+        holder.txt_capacidade.setText("Capacidade: "+model.get(position).getAlocacaomaxima());
 
     }
 
@@ -48,7 +49,7 @@ public class listar_salas extends RecyclerView.Adapter<listar_salas.MyViewHolder
 
     static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView nomeSala;
+        TextView nomeSala, txt_capacidade;
         RecyclerView rvSalas;
         listar_salas.onRvListener onRvListener;
 
@@ -56,6 +57,7 @@ public class listar_salas extends RecyclerView.Adapter<listar_salas.MyViewHolder
         {
             super(itemView);
             nomeSala = itemView.findViewById(R.id.txt_nomeSala);
+            txt_capacidade = itemView.findViewById(R.id.txt_capacidade);
             rvSalas = itemView.findViewById(R.id.rv_lista_salas);
 
             this.onRvListener = onRvListener;
